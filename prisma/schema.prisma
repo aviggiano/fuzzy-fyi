@@ -20,7 +20,6 @@ model User {
   name           String?
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
-  Job            Job[]
 }
 
 model Project {
@@ -38,6 +37,4 @@ model Job {
   cmd       String
   project   Project @relation(fields: [projectId], references: [id])
   projectId String
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String
 }
