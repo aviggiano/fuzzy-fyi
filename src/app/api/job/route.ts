@@ -1,19 +1,30 @@
-import { PrismaClient } from "@prisma/client";
+import { JobStatus, PrismaClient } from "@prisma/client";
 import { type Prisma } from "@prisma/client";
+import * as ec2 from "../services/ec2";
 
 const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
-  const body: Prisma.JobCreateInput & { projectId: string } =
-    await request.json();
+  const body: Prisma.JobCreateInput & {
+    projectId: string;
+    instanceType: string;
+  } = await request.json();
+
+  const instanceId = await ec2.runInstance({
+    instanceType: body.instanceType,
+    userData: Buffer.from(body.cmd).toString("base64"),
+  });
 
   const job = await prisma.job.create({
     data: {
       ref: body.ref,
       cmd: body.cmd,
       projectId: body.projectId,
+      instanceId: instanceId,
+      status: JobStatus.PROVISIONED,
     },
   });
+
   return new Response(JSON.stringify(job));
 }
 

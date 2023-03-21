@@ -31,10 +31,20 @@ model Project {
   Job            Job[]
 }
 
+enum JobStatus {
+  PROVISIONED
+  STARTED
+  RUNNING
+  FINISHED
+  DEPROVISIONED
+}
+
 model Job {
-  id        String  @id @default(uuid())
-  ref       String
-  cmd       String
-  project   Project @relation(fields: [projectId], references: [id])
-  projectId String
+  id         String    @id @default(uuid())
+  ref        String
+  cmd        String
+  instanceId String
+  status     JobStatus
+  project    Project   @relation(fields: [projectId], references: [id])
+  projectId  String
 }
