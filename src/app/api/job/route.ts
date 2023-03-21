@@ -1,6 +1,6 @@
 import { JobStatus, PrismaClient } from "@prisma/client";
 import { type Prisma } from "@prisma/client";
-import * as ec2 from "../services/ec2";
+import * as ec2 from "../../services/ec2";
 
 const prisma = new PrismaClient();
 
