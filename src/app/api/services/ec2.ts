@@ -1,4 +1,4 @@
-import { config } from "../config";
+import { config } from "@app/config";
 
 import AWS from "aws-sdk";
 AWS.config.update({ region: config.aws.region });
