@@ -120,6 +120,12 @@ function JobsTable() {
     setLimit(parseInt(event.target.value));
   };
 
+  const deleteJob = (jobId: string): void => {
+    fetch(`http://localhost:3000/api/job/${jobId}`, {
+      method: "DELETE",
+    }).then(() => (window.location.href = "/dashboard/jobs"));
+  };
+
   const filteredJobs = applyFilters(jobs, filters);
   const paginatedJobs = applyPagination(filteredJobs, page, limit);
   const selectedSomeJobs =
@@ -205,9 +211,7 @@ function JobsTable() {
                       {job.id}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
-                      {formatDistanceToNow(
-                        new Date(job.createdAt)
-                      ) + " ago"}
+                      {formatDistanceToNow(new Date(job.createdAt)) + " ago"}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -281,6 +285,7 @@ function JobsTable() {
                         }}
                         color="inherit"
                         size="small"
+                        onClick={() => deleteJob(job.id)}
                       >
                         <DeleteTwoToneIcon fontSize="small" />
                       </IconButton>
