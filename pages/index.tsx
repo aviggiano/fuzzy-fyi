@@ -54,7 +54,7 @@ function Overview() {
               <Box>
                 <Button
                   component={Link}
-                  href="/dashboards/tasks"
+                  href="/dashboard/tasks"
                   variant="contained"
                   sx={{ ml: 2 }}
                 >

@@ -1,7 +1,7 @@
 import Head from "next/head";
 import SidebarLayout from "@layouts/SidebarLayout";
 import { ChangeEvent, useState } from "react";
-import PageHeader from "@content/Dashboards/Tasks/PageHeader";
+import PageHeader from "@content/Dashboard/Tasks/PageHeader";
 import Footer from "@components/Footer";
 import {
   Grid,
@@ -16,13 +16,13 @@ import {
 } from "@mui/material";
 import PageTitleWrapper from "@components/PageTitleWrapper";
 
-import TeamOverview from "@content/Dashboards/Tasks/TeamOverview";
-import TasksAnalytics from "@content/Dashboards/Tasks/TasksAnalytics";
-import Performance from "@content/Dashboards/Tasks/Performance";
-import Projects from "@content/Dashboards/Tasks/Projects";
-import Checklist from "@content/Dashboards/Tasks/Checklist";
-import Profile from "@content/Dashboards/Tasks/Profile";
-import TaskSearch from "@content/Dashboards/Tasks/TaskSearch";
+import TeamOverview from "@content/Dashboard/Tasks/TeamOverview";
+import TasksAnalytics from "@content/Dashboard/Tasks/TasksAnalytics";
+import Performance from "@content/Dashboard/Tasks/Performance";
+import Projects from "@content/Dashboard/Tasks/Projects";
+import Checklist from "@content/Dashboard/Tasks/Checklist";
+import Profile from "@content/Dashboard/Tasks/Profile";
+import TaskSearch from "@content/Dashboard/Tasks/TaskSearch";
 
 const TabsContainerWrapper = styled(Box)(
   ({ theme }) => `

@@ -121,7 +121,7 @@ function Hero() {
           </TypographyH2>
           <Button
             component={Link}
-            href="/dashboards/tasks"
+            href="/dashboard/tasks"
             size="large"
             variant="contained"
           >
