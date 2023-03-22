@@ -45,6 +45,10 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
-  const projects = await prisma.job.findMany();
+  const projects = await prisma.job.findMany({
+    include: {
+      project: true,
+    },
+  });
   return new Response(JSON.stringify(projects));
 }
