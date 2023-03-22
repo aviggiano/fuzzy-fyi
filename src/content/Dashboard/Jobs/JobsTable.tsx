@@ -24,8 +24,8 @@ import {
 } from "@mui/material";
 
 import Label, { LabelProps } from "@components/Label";
-import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
+import DownloadTwoToneIcon from "@mui/icons-material/DownloadTwoTone";
 import BulkActions from "./BulkActions";
 import { formatDistanceToNow } from "date-fns";
 
@@ -262,34 +262,40 @@ function JobsTable() {
                       {getStatusLabel(job.status)}
                     </Typography>
                   </TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Edit Job" arrow>
-                      <IconButton
-                        sx={{
-                          "&:hover": {
-                            background: theme.colors.primary.lighter,
-                          },
-                          color: theme.palette.primary.main,
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <EditTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete Job" arrow>
-                      <IconButton
-                        sx={{
-                          "&:hover": { background: theme.colors.error.lighter },
-                          color: theme.palette.error.main,
-                        }}
-                        color="inherit"
-                        size="small"
-                        onClick={() => deleteJob(job.id)}
-                      >
-                        <DeleteTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
+                  <TableCell align="center">
+                    {job.status !== "DEPROVISIONED" ? (
+                      <Tooltip title="Stop Job" arrow>
+                        <IconButton
+                          sx={{
+                            "&:hover": {
+                              background: theme.colors.error.lighter,
+                            },
+                            color: theme.palette.error.main,
+                          }}
+                          color="inherit"
+                          size="small"
+                          onClick={() => deleteJob(job.id)}
+                        >
+                          <CancelTwoToneIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title="Download Logs" arrow>
+                        <IconButton
+                          sx={{
+                            "&:hover": {
+                              background: theme.colors.info.lighter,
+                            },
+                            color: theme.palette.info.main,
+                          }}
+                          color="inherit"
+                          size="small"
+                          onClick={() => console.log(job.id)}
+                        >
+                          <DownloadTwoToneIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
                   </TableCell>
                 </TableRow>
               );
