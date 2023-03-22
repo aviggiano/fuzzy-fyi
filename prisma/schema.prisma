@@ -8,10 +8,12 @@ datasource db {
 }
 
 model Organization {
-  id      String    @id @default(uuid())
-  name    String
-  User    User[]
-  Project Project[]
+  id        String    @id @default(uuid())
+  name      String
+  users     User[]
+  projects  Project[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
 }
 
 model User {
@@ -20,6 +22,8 @@ model User {
   name           String?
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now()) @updatedAt
 }
 
 model Project {
@@ -28,7 +32,9 @@ model Project {
   url            String
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
-  Job            Job[]
+  jobs           Job[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now()) @updatedAt
 }
 
 enum JobStatus {
@@ -47,4 +53,6 @@ model Job {
   status     JobStatus
   project    Project   @relation(fields: [projectId], references: [id])
   projectId  String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
 }
