@@ -33,8 +33,7 @@ echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/source
 sudo apt update && sudo apt install -y yarn
 
 echo "[$(date)] Install solc-select"
-pip3 install solc-select --user
-export PATH="$PATH:$HOME/.local/bin"
+sudo pip3 install solc-select
 
 echo "[$(date)] Install latest solidity versions"
 SOLC_LATEST=$(solc-select install | tail -1)
@@ -42,7 +41,7 @@ solc-select install | tail -5 | xargs -I{} solc-select install {}
 solc-select use $SOLC_LATEST
 
 echo "[$(date)] Install slither"
-pip3 install slither-analyzer --user
+sudo pip3 install slither-analyzer
 
 echo "[$(date)] Install echidna"
 wget https://github.com/crytic/echidna/releases/download/v2.0.5/echidna-test-2.0.5-Ubuntu-22.04.tar.gz

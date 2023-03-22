@@ -26,11 +26,11 @@ export async function DELETE(
     },
   });
 
-  await ec2.stopInstance({
+  await ec2.terminateInstance({
     instanceId: job.instanceId,
   });
 
-  await prisma.job.update({
+  const updatedJob = await prisma.job.update({
     where: {
       id: job.id,
     },
@@ -39,5 +39,5 @@ export async function DELETE(
     },
   });
 
-  return new Response(JSON.stringify(job));
+  return new Response(JSON.stringify(updatedJob));
 }

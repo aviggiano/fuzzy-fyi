@@ -10,9 +10,25 @@ export async function POST(request: Request) {
     instanceType: string;
   } = await request.json();
 
+  const project = await prisma.project.findUniqueOrThrow({
+    where: {
+      id: body.projectId,
+    },
+  });
+
   const instanceId = await ec2.runInstance({
     instanceType: body.instanceType,
-    userData: Buffer.from(body.cmd).toString("base64"),
+    userData: Buffer.from(
+      [
+        `#!/usr/bin/env bash`,
+        `set -ux`,
+        `git clone ${project.url}`,
+        `cd ${project.name}`,
+        `git checkout ${body.ref}`,
+        body.cmd,
+        // "sudo shutdown -h now",
+      ].join("\n")
+    ).toString("base64"),
   });
 
   const job = await prisma.job.create({
