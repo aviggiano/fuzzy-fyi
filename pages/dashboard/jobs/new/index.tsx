@@ -5,7 +5,7 @@ import PageTitleWrapper from "@components/PageTitleWrapper";
 import { Grid, Container } from "@mui/material";
 import Footer from "@components/Footer";
 
-import Jobs from "@content/Dashboard/Jobs/Jobs";
+import NewJob from "@content/Dashboard/Jobs/NewJob";
 
 function ApplicationsTransactions() {
   return (
@@ -14,7 +14,7 @@ function ApplicationsTransactions() {
         <title>Jobs</title>
       </Head>
       <PageTitleWrapper>
-        <PageHeader subtitle="Recent jobs" />
+        <PageHeader subtitle="New job" />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -25,7 +25,7 @@ function ApplicationsTransactions() {
           spacing={3}
         >
           <Grid item xs={12}>
-            <Jobs />
+            <NewJob />
           </Grid>
         </Grid>
       </Container>

@@ -27,6 +27,7 @@ import Label, { LabelProps } from "@components/Label";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import BulkActions from "./BulkActions";
+import { formatDistanceToNow } from "date-fns";
 
 interface Filters {
   status?: JobStatus;
@@ -35,10 +36,10 @@ interface Filters {
 const getStatusLabel = (jobStatus: JobStatus): JSX.Element => {
   const map: Record<JobStatus, LabelProps["color"]> = {
     PROVISIONED: "warning",
-    DEPROVISIONED: "error",
+    STARTED: "info",
+    RUNNING: "info",
     FINISHED: "success",
-    STARTED: "success",
-    RUNNING: "success",
+    DEPROVISIONED: "success",
   };
 
   const color: LabelProps["color"] = map[jobStatus];
@@ -126,8 +127,6 @@ function JobsTable() {
   const selectedAllJobs = selectedJobs.length === jobs.length;
   const theme = useTheme();
 
-  console.log(jobs);
-
   return (
     <Card>
       {selectedBulkActions && (
@@ -177,7 +176,7 @@ function JobsTable() {
               <TableCell>Command</TableCell>
               <TableCell>Instance ID</TableCell>
               <TableCell>Project</TableCell>
-              <TableCell align="right">Status</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -202,9 +201,13 @@ function JobsTable() {
                       fontWeight="bold"
                       color="text.primary"
                       gutterBottom
-                      noWrap
                     >
                       {job.id}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" noWrap>
+                      {formatDistanceToNow(
+                        new Date(job.createdAt)
+                      ) + " ago"}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -222,9 +225,8 @@ function JobsTable() {
                     <Typography
                       variant="body1"
                       fontWeight="bold"
-                      color="text.primary"
+                      color="text.secondary"
                       gutterBottom
-                      noWrap
                     >
                       {job.cmd}
                     </Typography>

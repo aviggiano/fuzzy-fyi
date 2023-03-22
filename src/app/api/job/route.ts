@@ -35,7 +35,11 @@ export async function POST(request: Request) {
     data: {
       ref: body.ref,
       cmd: body.cmd,
-      projectId: body.projectId,
+      project: {
+        connect: {
+          id: body.projectId,
+        }
+      },
       instanceId: instanceId,
       status: JobStatus.PROVISIONED,
     },
@@ -45,10 +49,13 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
-  const projects = await prisma.job.findMany({
+  const jobs = await prisma.job.findMany({
     include: {
       project: true,
     },
+    orderBy:{
+      createdAt: 'desc'
+    }
   });
-  return new Response(JSON.stringify(projects));
+  return new Response(JSON.stringify(jobs));
 }
