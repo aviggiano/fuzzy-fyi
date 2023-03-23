@@ -21,7 +21,7 @@ function NewJob() {
   const instanceTypes = ["c5.large", "c5.xlarge", "c5.2xlarge"];
   const [instanceType, setInstanceType] = useState<string>(instanceTypes[0]);
   useEffect(() => {
-    fetch("http://localhost:3000/api/project")
+    fetch("/api/project")
       .then((res) => res.json())
       .then((projects) => {
         setProjects(projects);
@@ -30,7 +30,7 @@ function NewJob() {
   }, []);
 
   const onClick = () => {
-    fetch("http://localhost:3000/api/job", {
+    fetch("/api/job", {
       method: "POST",
       body: JSON.stringify({
         projectId: project?.id,
