@@ -9,14 +9,32 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-ec2": "^3.297.0",
+    "@emotion/react": "^11.10.6",
+    "@emotion/server": "^11.10.0",
+    "@emotion/styled": "^11.10.6",
+    "@mui/icons-material": "^5.11.11",
+    "@mui/material": "^5.11.14",
+    "@mui/styles": "^5.11.13",
+    "@mui/x-date-pickers": "^6.0.2",
+    "@prisma/client": "^4.11.0",
+    "@supabase/auth-helpers-nextjs": "^0.5.6",
+    "@supabase/auth-helpers-react": "^0.3.1",
+    "@supabase/auth-ui-react": "^0.3.5",
+    "@supabase/supabase-js": "^2.12.1",
     "@types/node": "18.15.5",
+    "@types/nprogress": "^0.2.0",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
+    "date-fns": "^2.29.3",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
     "next": "13.2.4",
+    "nprogress": "^0.2.0",
     "react": "18.2.0",
+    "react-custom-scrollbars-2": "^4.5.0",
     "react-dom": "18.2.0",
+    "swr": "^2.1.1",
     "typescript": "5.0.2"
   }
 }
