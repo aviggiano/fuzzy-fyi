@@ -1,13 +1,15 @@
 export const config = {
   aws: {
-    region: process.env.AWS_REGION!,
+    region: process.env.AAWS_REGION || process.env.AWS_REGION!,
     ec2: {
-      amiId: process.env.AWS_EC2_AMI_ID!,
-      keyName: process.env.AWS_EC2_KEY_NAME!,
-      instanceProfileArn: process.env.AWS_EC2_INSTANCE_PROFILE_ARN!,
+      amiId: process.env.AAWS_EC2_AMI_ID || process.env.AWS_EC2_AMI_ID!,
+      keyName: process.env.AAWS_EC2_KEY_NAME || process.env.AWS_EC2_KEY_NAME!,
+      instanceProfileArn:
+        process.env.AAWS_EC2_INSTANCE_PROFILE_ARN ||
+        process.env.AWS_EC2_INSTANCE_PROFILE_ARN!,
     },
     s3: {
-      bucket: process.env.AWS_S3_BUCKET!,
+      bucket: process.env.AAWS_S3_BUCKET || process.env.AWS_S3_BUCKET!,
     },
   },
   backend: {
