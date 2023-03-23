@@ -11,8 +11,9 @@ import { Project } from "@prisma/client";
 
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { MouseEventHandler, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
+import { config } from "@config";
 
 function NewJob({ projects }: { projects: Project[] }) {
   const router = useRouter();
@@ -26,7 +27,7 @@ function NewJob({ projects }: { projects: Project[] }) {
 
   const onClick = () => {
     setIsActive(false);
-    fetch("/api/job", {
+    fetch(`${config.backend.url}/api/job`, {
       method: "POST",
       body: JSON.stringify({
         projectId: project?.id,

@@ -30,6 +30,7 @@ import DownloadTwoToneIcon from "@mui/icons-material/DownloadTwoTone";
 import BulkActions from "./BulkActions";
 import { formatDistanceToNow } from "date-fns";
 import { useRouter } from "next/router";
+import { config } from "@config";
 
 interface Filters {
   status?: JobStatus;
@@ -114,7 +115,7 @@ function Jobs({ jobs }: { jobs: Job[] }) {
   };
 
   const deleteJob = (jobId: string): void => {
-    fetch(`/api/job/${jobId}`, {
+    fetch(`${config.backend.url}/api/job/${jobId}`, {
       method: "DELETE",
     }).then(() => {
       router.push("/dashboard/jobs");
