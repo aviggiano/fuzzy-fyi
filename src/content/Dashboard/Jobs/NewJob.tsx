@@ -74,7 +74,7 @@ function NewJob({ projects }: { projects: Project[] }) {
                     value={project?.name}
                     onChange={(e) =>
                       setProject(
-                        projects.find((p) => p.name === e.target.value)
+                        projects.find((p) => p.name === e.target.value)!
                       )
                     }
                   >
