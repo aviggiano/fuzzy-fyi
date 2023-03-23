@@ -46,13 +46,14 @@ enum JobStatus {
 }
 
 model Job {
-  id         String    @id @default(uuid())
-  ref        String
-  cmd        String
-  instanceId String
-  status     JobStatus
-  project    Project   @relation(fields: [projectId], references: [id])
-  projectId  String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @default(now()) @updatedAt
+  id           String    @id @default(uuid())
+  ref          String
+  cmd          String
+  instanceId   String
+  instanceType String    @default("c5.large")
+  status       JobStatus
+  project      Project   @relation(fields: [projectId], references: [id])
+  projectId    String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt
 }

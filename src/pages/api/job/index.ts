@@ -17,7 +17,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
   const body: Prisma.JobCreateInput & {
     projectId: string;
     instanceType: string;
-  } = await request.body;
+  } = request.body;
 
   const instanceId = await ec2.runInstance({
     instanceType: body.instanceType,
@@ -34,6 +34,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
     data: {
       ref: body.ref,
       cmd: body.cmd,
+      instanceType: body.instanceType,
       project: {
         connect: {
           id: body.projectId,
