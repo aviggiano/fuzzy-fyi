@@ -1,8 +1,7 @@
-import { JobStatus, PrismaClient } from "@prisma/client";
+import { JobStatus } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as ec2 from "@services/ec2";
-
-const prisma = new PrismaClient();
+import prisma from "@services/prisma";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {

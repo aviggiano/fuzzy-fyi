@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { type Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-
-const prisma = new PrismaClient();
+import prisma from "@services/prisma";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -14,7 +12,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
 async function POST(request: NextApiRequest, response: NextApiResponse) {
   const body: Prisma.ProjectCreateInput & { organizationId: string } =
-    request.body;
+    JSON.parse(request.body);
 
   const project = await prisma.project.create({
     data: {

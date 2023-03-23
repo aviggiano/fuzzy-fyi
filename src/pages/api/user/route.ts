@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { type Prisma } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "@services/prisma";
 
 export async function POST(request: Request) {
   const body: Prisma.UserCreateInput & { organizationId: string } =

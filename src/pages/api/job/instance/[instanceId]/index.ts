@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { config } from "@config";
-
-const prisma = new PrismaClient();
+import prisma from "@services/prisma";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {

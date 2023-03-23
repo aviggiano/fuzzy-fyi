@@ -1,9 +1,8 @@
-import { JobStatus, PrismaClient } from "@prisma/client";
+import { JobStatus } from "@prisma/client";
 import { type Prisma } from "@prisma/client";
 import * as ec2 from "@services/ec2";
 import type { NextApiRequest, NextApiResponse } from "next";
-
-const prisma = new PrismaClient();
+import prisma from "@services/prisma";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -17,7 +16,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
   const body: Prisma.JobCreateInput & {
     projectId: string;
     instanceType: string;
-  } = request.body;
+  } = JSON.parse(request.body);
 
   const instanceId = await ec2.runInstance({
     instanceType: body.instanceType,
