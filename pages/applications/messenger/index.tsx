@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 import Head from "next/head";
 import SidebarLayout from "@layouts/SidebarLayout";
@@ -142,7 +142,7 @@ function ApplicationsMessenger() {
   );
 }
 
-ApplicationsMessenger.getLayout = (page) => (
+ApplicationsMessenger.getLayout = (page: ReactNode) => (
   <SidebarLayout>{page}</SidebarLayout>
 );
 

@@ -1,13 +1,13 @@
-import { Box, Avatar, Typography, Card, styled, Divider } from '@mui/material';
+import { Box, Avatar, Typography, Card, styled, Divider } from "@mui/material";
 
 import {
   formatDistance,
   format,
   subDays,
   subHours,
-  subMinutes
-} from 'date-fns';
-import ScheduleTwoToneIcon from '@mui/icons-material/ScheduleTwoTone';
+  subMinutes,
+} from "date-fns";
+import ScheduleTwoToneIcon from "@mui/icons-material/ScheduleTwoTone";
 
 const DividerWrapper = styled(Divider)(
   ({ theme }) => `
@@ -47,14 +47,14 @@ const CardWrapperSecondary = styled(Card)(
 
 function ChatContent() {
   const user = {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg'
+    name: "Catherine Pike",
+    avatar: "/static/images/avatars/1.jpg",
   };
 
   return (
     <Box p={3}>
       <DividerWrapper>
-        {format(subDays(new Date(), 3), 'MMMM dd yyyy')}
+        {format(subDays(new Date(), 3), "MMMM dd yyyy")}
       </DividerWrapper>
 
       <Box
@@ -67,7 +67,7 @@ function ChatContent() {
           variant="rounded"
           sx={{
             width: 50,
-            height: 50
+            height: 50,
           }}
           alt="Zain Baptista"
           src="/static/images/avatars/2.jpg"
@@ -86,18 +86,18 @@ function ChatContent() {
             variant="subtitle1"
             sx={{
               pt: 1,
-              display: 'flex',
-              alignItems: 'center'
+              display: "flex",
+              alignItems: "center",
             }}
           >
             <ScheduleTwoToneIcon
               sx={{
-                mr: 0.5
+                mr: 0.5,
               }}
               fontSize="small"
             />
             {formatDistance(subHours(new Date(), 115), new Date(), {
-              addSuffix: true
+              addSuffix: true,
             })}
           </Typography>
         </Box>
@@ -117,25 +117,25 @@ function ChatContent() {
           mr={2}
         >
           <CardWrapperPrimary>
-            Yes, I'll email them right now. I'll let you know once the remaining
-            invoices are done.
+            Yes, I will email them right now. I will let you know once the
+            remaining invoices are done.
           </CardWrapperPrimary>
           <Typography
             variant="subtitle1"
             sx={{
               pt: 1,
-              display: 'flex',
-              alignItems: 'center'
+              display: "flex",
+              alignItems: "center",
             }}
           >
             <ScheduleTwoToneIcon
               sx={{
-                mr: 0.5
+                mr: 0.5,
               }}
               fontSize="small"
             />
             {formatDistance(subHours(new Date(), 125), new Date(), {
-              addSuffix: true
+              addSuffix: true,
             })}
           </Typography>
         </Box>
@@ -143,14 +143,14 @@ function ChatContent() {
           variant="rounded"
           sx={{
             width: 50,
-            height: 50
+            height: 50,
           }}
           alt={user.name}
           src={user.avatar}
         />
       </Box>
       <DividerWrapper>
-        {format(subDays(new Date(), 5), 'MMMM dd yyyy')}
+        {format(subDays(new Date(), 5), "MMMM dd yyyy")}
       </DividerWrapper>
 
       <Box
@@ -169,7 +169,7 @@ function ChatContent() {
           <CardWrapperPrimary>Hey! Are you there?</CardWrapperPrimary>
           <CardWrapperPrimary
             sx={{
-              mt: 2
+              mt: 2,
             }}
           >
             Heeeelloooo????
@@ -178,18 +178,18 @@ function ChatContent() {
             variant="subtitle1"
             sx={{
               pt: 1,
-              display: 'flex',
-              alignItems: 'center'
+              display: "flex",
+              alignItems: "center",
             }}
           >
             <ScheduleTwoToneIcon
               sx={{
-                mr: 0.5
+                mr: 0.5,
               }}
               fontSize="small"
             />
             {formatDistance(subHours(new Date(), 60), new Date(), {
-              addSuffix: true
+              addSuffix: true,
             })}
           </Typography>
         </Box>
@@ -197,7 +197,7 @@ function ChatContent() {
           variant="rounded"
           sx={{
             width: 50,
-            height: 50
+            height: 50,
           }}
           alt={user.name}
           src={user.avatar}
@@ -214,7 +214,7 @@ function ChatContent() {
           variant="rounded"
           sx={{
             width: 50,
-            height: 50
+            height: 50,
           }}
           alt="Zain Baptista"
           src="/static/images/avatars/2.jpg"
@@ -229,7 +229,7 @@ function ChatContent() {
           <CardWrapperSecondary>Hey there!</CardWrapperSecondary>
           <CardWrapperSecondary
             sx={{
-              mt: 1
+              mt: 1,
             }}
           >
             How are you? Is it ok if I call you?
@@ -238,18 +238,18 @@ function ChatContent() {
             variant="subtitle1"
             sx={{
               pt: 1,
-              display: 'flex',
-              alignItems: 'center'
+              display: "flex",
+              alignItems: "center",
             }}
           >
             <ScheduleTwoToneIcon
               sx={{
-                mr: 0.5
+                mr: 0.5,
               }}
               fontSize="small"
             />
             {formatDistance(subMinutes(new Date(), 6), new Date(), {
-              addSuffix: true
+              addSuffix: true,
             })}
           </Typography>
         </Box>
@@ -273,7 +273,7 @@ function ChatContent() {
           </CardWrapperPrimary>
           <CardWrapperPrimary
             sx={{
-              mt: 1
+              mt: 1,
             }}
           >
             Can you confirm?
@@ -282,18 +282,18 @@ function ChatContent() {
             variant="subtitle1"
             sx={{
               pt: 1,
-              display: 'flex',
-              alignItems: 'center'
+              display: "flex",
+              alignItems: "center",
             }}
           >
             <ScheduleTwoToneIcon
               sx={{
-                mr: 0.5
+                mr: 0.5,
               }}
               fontSize="small"
             />
             {formatDistance(subMinutes(new Date(), 8), new Date(), {
-              addSuffix: true
+              addSuffix: true,
             })}
           </Typography>
         </Box>
@@ -301,7 +301,7 @@ function ChatContent() {
           variant="rounded"
           sx={{
             width: 50,
-            height: 50
+            height: 50,
           }}
           alt={user.name}
           src={user.avatar}

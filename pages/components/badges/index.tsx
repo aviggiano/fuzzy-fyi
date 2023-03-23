@@ -10,7 +10,7 @@ import {
   CardContent,
   Divider,
 } from "@mui/material";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import Footer from "@components/Footer";
 
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -174,6 +174,8 @@ function Badges() {
   );
 }
 
-Badges.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+Badges.getLayout = (page: ReactElement) => (
+  <SidebarLayout>{page}</SidebarLayout>
+);
 
 export default Badges;

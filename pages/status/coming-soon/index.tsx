@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 import {
   Box,
@@ -69,7 +70,7 @@ const ButtonNotify = styled(Button)(
 );
 
 function StatusComingSoon() {
-  const calculateTimeLeft = () => {
+  const calculateTimeLeft = (): Record<string, number> => {
     const difference = +new Date(`2023`) - +new Date();
     let timeLeft = {};
 
@@ -93,7 +94,7 @@ function StatusComingSoon() {
     }, 1000);
   });
 
-  const timerComponents = [];
+  const timerComponents: any[] = [];
 
   Object.keys(timeLeft).forEach((interval) => {
     if (!timeLeft[interval]) {
@@ -128,7 +129,7 @@ function StatusComingSoon() {
                   fontWeight="normal"
                   sx={{ mb: 4 }}
                 >
-                  We're working on implementing the last features before our
+                  We are working on implementing the last features before our
                   launch!
                 </Typography>
               </Container>
@@ -140,7 +141,7 @@ function StatusComingSoon() {
             </Box>
 
             <Box display="flex" justifyContent="center">
-              {timerComponents.length ? timerComponents : <>Time's up!</>}
+              {timerComponents.length ? timerComponents : <>Time is up!</>}
             </Box>
 
             <Container maxWidth="sm">
@@ -163,7 +164,7 @@ function StatusComingSoon() {
                     }
                   />
                   <FormHelperText>
-                    We'll email you once our website is launched!
+                    We will email you once our website is launched!
                   </FormHelperText>
                 </FormControl>
                 <Divider sx={{ my: 4 }} />

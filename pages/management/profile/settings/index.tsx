@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, ReactElement } from "react";
 import Head from "next/head";
 import SidebarLayout from "@layouts/SidebarLayout";
 import PageHeader from "@content/Management/Users/settings/PageHeader";
@@ -77,7 +77,7 @@ function ManagementUserSettings() {
   );
 }
 
-ManagementUserSettings.getLayout = (page) => (
+ManagementUserSettings.getLayout = (page: ReactElement) => (
   <SidebarLayout>{page}</SidebarLayout>
 );
 

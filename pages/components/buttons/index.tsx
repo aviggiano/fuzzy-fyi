@@ -15,6 +15,7 @@ import {
 import Footer from "@components/Footer";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { ReactElement } from "react";
 
 function Buttons() {
   return (
@@ -216,6 +217,8 @@ function Buttons() {
   );
 }
 
-Buttons.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+Buttons.getLayout = (page: ReactElement) => (
+  <SidebarLayout>{page}</SidebarLayout>
+);
 
 export default Buttons;

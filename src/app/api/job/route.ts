@@ -1,6 +1,7 @@
 import { JobStatus, PrismaClient } from "@prisma/client";
 import { type Prisma } from "@prisma/client";
 import * as ec2 from "../../services/ec2";
+import { config } from "@app/config";
 
 const prisma = new PrismaClient();
 
@@ -22,11 +23,7 @@ export async function POST(request: Request) {
       [
         `#!/usr/bin/env bash`,
         `set -ux`,
-        `git clone ${project.url}`,
-        `cd ${project.name}`,
-        `git checkout ${body.ref}`,
-        body.cmd,
-        // "sudo shutdown -h now",
+        `sudo su ubuntu -s /tmp/runner.sh`,
       ].join("\n")
     ).toString("base64"),
   });
@@ -38,7 +35,7 @@ export async function POST(request: Request) {
       project: {
         connect: {
           id: body.projectId,
-        }
+        },
       },
       instanceId: instanceId,
       status: JobStatus.PROVISIONED,
@@ -53,9 +50,9 @@ export async function GET(request: Request) {
     include: {
       project: true,
     },
-    orderBy:{
-      createdAt: 'desc'
-    }
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   return new Response(JSON.stringify(jobs));
 }

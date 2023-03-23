@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import {
   Box,
   Card,
@@ -59,7 +60,7 @@ function Status404() {
             <Box textAlign="center">
               <img alt="404" height={180} src="/static/images/status/404.svg" />
               <Typography variant="h2" sx={{ my: 2 }}>
-                The page you were looking for doesn't exist.
+                The page you were looking for does not exist.
               </Typography>
               <Typography
                 variant="h4"
@@ -67,8 +68,8 @@ function Status404() {
                 fontWeight="normal"
                 sx={{ mb: 4 }}
               >
-                It's on us, we moved the content to a different page. The search
-                below should help!
+                We moved the content to a different page. The search below
+                should help!
               </Typography>
             </Box>
             <Container maxWidth="sm">

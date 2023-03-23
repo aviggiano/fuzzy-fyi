@@ -1,6 +1,6 @@
 import Head from "next/head";
 import SidebarLayout from "@layouts/SidebarLayout";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, ReactElement, useState } from "react";
 import PageHeader from "@content/Dashboard/Tasks/PageHeader";
 import Footer from "@components/Footer";
 import {
@@ -69,7 +69,7 @@ const TabsContainerWrapper = styled(Box)(
               position: relative;
               margin-right: ${theme.spacing(1)};
               font-size: ${theme.typography.pxToRem(14)};
-              color: ${theme.colors.alpha.black[80]};
+              color: ${theme.colors.alpha.black[70]};
               border-bottom-left-radius: 0;
               border-bottom-right-radius: 0;
 
@@ -225,6 +225,8 @@ function DashboardTasks() {
   );
 }
 
-DashboardTasks.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+DashboardTasks.getLayout = (page: ReactElement) => (
+  <SidebarLayout>{page}</SidebarLayout>
+);
 
 export default DashboardTasks;

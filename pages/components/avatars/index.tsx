@@ -17,6 +17,7 @@ import { deepOrange, deepPurple, green, pink } from "@mui/material/colors";
 import FolderIcon from "@mui/icons-material/Folder";
 import PageviewIcon from "@mui/icons-material/Pageview";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import { ReactElement } from "react";
 
 function stringToColor(string: string) {
   let hash = 0;
@@ -162,6 +163,8 @@ function Avatars() {
   );
 }
 
-Avatars.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+Avatars.getLayout = (page: ReactElement) => (
+  <SidebarLayout>{page}</SidebarLayout>
+);
 
 export default Avatars;

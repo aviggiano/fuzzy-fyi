@@ -1,7 +1,7 @@
 import Head from "next/head";
 import SidebarLayout from "@layouts/SidebarLayout";
 import PageTitle from "@components/PageTitle";
-import { useState } from "react";
+import { ReactElement, SetStateAction, useState } from "react";
 
 import PageTitleWrapper from "@components/PageTitleWrapper";
 import {
@@ -57,13 +57,16 @@ const currencies = [
 function Forms() {
   const [currency, setCurrency] = useState("EUR");
 
-  const handleChange = (event) => {
+  const handleChange = (event: { target: { value: string } }) => {
     setCurrency(event.target.value);
   };
 
   const [value, setValue] = useState(30);
 
-  const handleChange2 = (_event, newValue) => {
+  const handleChange2 = (
+    _event: { target: { value: string } },
+    newValue: SetStateAction<number>
+  ) => {
     setValue(newValue);
   };
 
@@ -460,7 +463,7 @@ function Forms() {
                     <Slider
                       aria-label="Volume"
                       value={value}
-                      onChange={handleChange2}
+                      // onChange={handleChange2}
                     />
                     <VolumeUp />
                   </Stack>
@@ -480,6 +483,6 @@ function Forms() {
   );
 }
 
-Forms.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+Forms.getLayout = (page: ReactElement) => <SidebarLayout>{page}</SidebarLayout>;
 
 export default Forms;

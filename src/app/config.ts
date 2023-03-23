@@ -6,5 +6,14 @@ export const config = {
       keyName: process.env.AWS_EC2_KEY_NAME!,
       instanceProfileArn: process.env.AWS_EC2_INSTANCE_PROFILE_ARN!,
     },
+    s3: {
+      bucket: process.env.AWS_S3_BUCKET!
+    }
   },
+  backend: {
+    url: process.env.NODE_ENV === 'production' ? 'https://app.fuzzy.fyi' : 'http://localhost:3000'
+  },
+  runner: {
+    jobId: process.env.JOB_ID!
+  }
 };

@@ -21,6 +21,7 @@ import {
   Typography,
   useTheme,
   CardHeader,
+  SelectChangeEvent,
 } from "@mui/material";
 
 import Label, { LabelProps } from "@components/Label";
@@ -76,7 +77,7 @@ function JobsTable() {
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [filters, setFilters] = useState<Filters>({
-    status: null,
+    status: undefined,
   });
 
   const statusOptions = Object.keys(JobStatus).map((status) => ({
@@ -84,12 +85,9 @@ function JobsTable() {
     name: status,
   }));
 
-  const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    let value = null;
-
-    if (e.target.value !== "all") {
-      value = e.target.value;
-    }
+  const handleStatusChange = (e: SelectChangeEvent): void => {
+    const value: JobStatus | undefined =
+      e.target.value !== "all" ? (e.target.value as JobStatus) : undefined;
 
     setFilters((prevFilters) => ({
       ...prevFilters,

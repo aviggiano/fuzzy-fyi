@@ -6,6 +6,7 @@ import { Grid, Container } from "@mui/material";
 import Footer from "@components/Footer";
 
 import RecentOrders from "@content/Management/Transactions/RecentOrders";
+import { ReactElement } from "react";
 
 function ApplicationsTransactions() {
   return (
@@ -34,7 +35,7 @@ function ApplicationsTransactions() {
   );
 }
 
-ApplicationsTransactions.getLayout = (page) => (
+ApplicationsTransactions.getLayout = (page: ReactElement) => (
   <SidebarLayout>{page}</SidebarLayout>
 );
 

@@ -23,6 +23,7 @@ import {
   Typography,
   useTheme,
   CardHeader,
+  SelectChangeEvent,
 } from "@mui/material";
 
 import Label from "@components/Label";
@@ -92,7 +93,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [filters, setFilters] = useState<Filters>({
-    status: null,
+    status: undefined,
   });
 
   const statusOptions = [
@@ -114,11 +115,11 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
     },
   ];
 
-  const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    let value = null;
+  const handleStatusChange = (e: SelectChangeEvent): void => {
+    let value: CryptoOrderStatus | undefined = undefined;
 
     if (e.target.value !== "all") {
-      value = e.target.value;
+      value = e.target.value as CryptoOrderStatus;
     }
 
     setFilters((prevFilters) => ({

@@ -8,12 +8,32 @@ export async function GET(
   request: Request,
   { params }: { params: Prisma.JobSelect }
 ) {
-  const projects = await prisma.job.findUniqueOrThrow({
+  const job = await prisma.job.findUniqueOrThrow({
+    where: {
+      id: params.id?.toString(),
+    },
+    include: {
+      project: true,
+    },
+  });
+  return new Response(JSON.stringify(job));
+}
+
+export async function PATCH(
+  request: Request,
+  { params }: { params: Prisma.JobSelect }
+) {
+  const body: Prisma.JobUpdateInput = await request.json();
+
+  const job = await prisma.job.update({
+    data: {
+      ...body,
+    },
     where: {
       id: params.id?.toString(),
     },
   });
-  return new Response(JSON.stringify(projects));
+  return new Response(JSON.stringify(job));
 }
 
 export async function DELETE(

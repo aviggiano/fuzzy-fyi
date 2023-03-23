@@ -1,7 +1,7 @@
 import Head from "next/head";
 import SidebarLayout from "@layouts/SidebarLayout";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { ReactElement, SetStateAction, useState } from "react";
 
 import PageTitle from "@components/PageTitle";
 import PageTitleWrapper from "@components/PageTitleWrapper";
@@ -29,14 +29,14 @@ import Footer from "@components/Footer";
 
 const emails = ["username@gmail.com", "user02@gmail.com"];
 
-function SimpleDialog(props) {
+function SimpleDialog(props: { onClose: any; selectedValue: any; open: any }) {
   const { onClose, selectedValue, open } = props;
 
   const handleClose = () => {
     onClose(selectedValue);
   };
 
-  const handleListItemClick = (value) => {
+  const handleListItemClick = (value: string) => {
     onClose(value);
   };
 
@@ -90,7 +90,7 @@ function Modals() {
     setOpen(true);
   };
 
-  const handleClose = (value) => {
+  const handleClose = (value: SetStateAction<string>) => {
     setOpen(false);
     setSelectedValue(value);
   };
@@ -142,6 +142,8 @@ function Modals() {
   );
 }
 
-Modals.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+Modals.getLayout = (page: ReactElement) => (
+  <SidebarLayout>{page}</SidebarLayout>
+);
 
 export default Modals;

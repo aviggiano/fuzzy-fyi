@@ -10,7 +10,7 @@ import {
   CardContent,
   Divider,
 } from "@mui/material";
-import { useState, SyntheticEvent } from "react";
+import { useState, SyntheticEvent, ReactElement } from "react";
 
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -117,6 +117,8 @@ function TabsDemo() {
   );
 }
 
-TabsDemo.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+TabsDemo.getLayout = (page: ReactElement) => (
+  <SidebarLayout>{page}</SidebarLayout>
+);
 
 export default TabsDemo;

@@ -1,6 +1,6 @@
 import Head from "next/head";
 import SidebarLayout from "@layouts/SidebarLayout";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 
 import PageTitle from "@components/PageTitle";
 import PageTitleWrapper from "@components/PageTitleWrapper";
@@ -239,6 +239,6 @@ function Cards() {
   );
 }
 
-Cards.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+Cards.getLayout = (page: ReactElement) => <SidebarLayout>{page}</SidebarLayout>;
 
 export default Cards;

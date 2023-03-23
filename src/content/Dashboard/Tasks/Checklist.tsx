@@ -7,18 +7,18 @@ import {
   Checkbox,
   FormGroup,
   Tooltip,
-  styled
-} from '@mui/material';
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineDot from '@mui/lab/TimelineDot';
-import RefreshTwoToneIcon from '@mui/icons-material/RefreshTwoTone';
-import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
-import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
-import BusinessCenterTwoToneIcon from '@mui/icons-material/BusinessCenterTwoTone';
+  styled,
+} from "@mui/material";
+import Timeline from "@mui/lab/Timeline";
+import TimelineItem from "@mui/lab/TimelineItem";
+import TimelineSeparator from "@mui/lab/TimelineSeparator";
+import TimelineConnector from "@mui/lab/TimelineConnector";
+import TimelineContent from "@mui/lab/TimelineContent";
+import TimelineDot from "@mui/lab/TimelineDot";
+import RefreshTwoToneIcon from "@mui/icons-material/RefreshTwoTone";
+import AssignmentTwoToneIcon from "@mui/icons-material/AssignmentTwoTone";
+import AccountTreeTwoToneIcon from "@mui/icons-material/AccountTreeTwoTone";
+import BusinessCenterTwoToneIcon from "@mui/icons-material/BusinessCenterTwoTone";
 
 const TimelineWrapper = styled(Timeline)(
   ({ theme }) => `
@@ -56,7 +56,7 @@ function Checklist() {
       <CardHeader
         sx={{
           px: 0,
-          pt: 0
+          pt: 0,
         }}
         action={
           <Tooltip arrow title="Refresh list">
@@ -79,10 +79,10 @@ function Checklist() {
             <Typography
               variant="h4"
               sx={{
-                pb: 2
+                pb: 2,
               }}
             >
-              "Tasks Quick List"
+              Tasks Quick List
             </Typography>
             <FormGroup>
               <FormControlLabel
@@ -111,10 +111,10 @@ function Checklist() {
             <Typography
               variant="h4"
               sx={{
-                pb: 2
+                pb: 2,
               }}
             >
-              "Project Management"
+              Project Management
             </Typography>
             <FormGroup>
               <FormControlLabel
@@ -139,10 +139,10 @@ function Checklist() {
             <Typography
               variant="h4"
               sx={{
-                pb: 2
+                pb: 2,
               }}
             >
-              "Business & Marketing"
+              Business & Marketing
             </Typography>
             <FormGroup>
               <FormControlLabel

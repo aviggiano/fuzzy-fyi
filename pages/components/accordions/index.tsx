@@ -17,6 +17,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Footer from "@components/Footer";
+import { ReactNode } from "react";
 
 function Accordions() {
   return (
@@ -95,6 +96,8 @@ function Accordions() {
   );
 }
 
-Accordions.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+Accordions.getLayout = (page: ReactNode) => (
+  <SidebarLayout>{page}</SidebarLayout>
+);
 
 export default Accordions;

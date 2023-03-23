@@ -14,6 +14,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import Footer from "@components/Footer";
+import { ReactElement } from "react";
 
 function Tooltips() {
   return (
@@ -117,6 +118,8 @@ function Tooltips() {
   );
 }
 
-Tooltips.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+Tooltips.getLayout = (page: ReactElement) => (
+  <SidebarLayout>{page}</SidebarLayout>
+);
 
 export default Tooltips;

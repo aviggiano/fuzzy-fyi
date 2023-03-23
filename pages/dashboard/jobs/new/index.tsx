@@ -6,6 +6,7 @@ import { Grid, Container } from "@mui/material";
 import Footer from "@components/Footer";
 
 import NewJob from "@content/Dashboard/Jobs/NewJob";
+import { ReactElement } from "react";
 
 function ApplicationsTransactions() {
   return (
@@ -34,7 +35,7 @@ function ApplicationsTransactions() {
   );
 }
 
-ApplicationsTransactions.getLayout = (page) => (
+ApplicationsTransactions.getLayout = (page: ReactElement) => (
   <SidebarLayout>{page}</SidebarLayout>
 );
 

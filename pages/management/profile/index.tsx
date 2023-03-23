@@ -10,6 +10,7 @@ import Feed from "@content/Management/Users/details/Feed";
 import PopularTags from "@content/Management/Users/details/PopularTags";
 import MyCards from "@content/Management/Users/details/MyCards";
 import Addresses from "@content/Management/Users/details/Addresses";
+import { ReactElement } from "react";
 
 function ManagementUserProfile() {
   const user = {
@@ -62,7 +63,7 @@ function ManagementUserProfile() {
   );
 }
 
-ManagementUserProfile.getLayout = (page) => (
+ManagementUserProfile.getLayout = (page: ReactElement) => (
   <SidebarLayout>{page}</SidebarLayout>
 );
 
