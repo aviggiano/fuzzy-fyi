@@ -1,16 +1,6 @@
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemText,
-  Menu,
-  MenuItem,
-  styled,
-} from "@mui/material";
+import { Box, List, Menu, MenuItem, styled } from "@mui/material";
 import { useRef, useState } from "react";
 import Link from "@components/Link";
-
-import ExpandMoreTwoToneIcon from "@mui/icons-material/ExpandMoreTwoTone";
 
 const ListWrapper = styled(Box)(
   ({ theme }) => `
@@ -67,10 +57,6 @@ function HeaderMenu() {
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
 
-  const handleOpen = (): void => {
-    setOpen(true);
-  };
-
   const handleClose = (): void => {
     setOpen(false);
   };
@@ -85,48 +71,7 @@ function HeaderMenu() {
           },
         }}
       >
-        <List disablePadding component={Box} display="flex">
-          <ListItem
-            classes={{ root: "MuiListItem-indicators" }}
-            button
-            component={Link}
-            href="/components/buttons"
-          >
-            <ListItemText
-              primaryTypographyProps={{ noWrap: true }}
-              primary="Buttons"
-            />
-          </ListItem>
-          <ListItem
-            classes={{ root: "MuiListItem-indicators" }}
-            button
-            component={Link}
-            href="/components/forms"
-          >
-            <ListItemText
-              primaryTypographyProps={{ noWrap: true }}
-              primary="Forms"
-            />
-          </ListItem>
-          <ListItem
-            classes={{ root: "MuiListItem-indicators" }}
-            button
-            ref={ref}
-            onClick={handleOpen}
-          >
-            <ListItemText
-              primaryTypographyProps={{ noWrap: true }}
-              primary={
-                <Box display="flex" alignItems="center">
-                  Others
-                  <Box display="flex" alignItems="center" pl={0.3}>
-                    <ExpandMoreTwoToneIcon fontSize="small" />
-                  </Box>
-                </Box>
-              }
-            />
-          </ListItem>
-        </List>
+        <List disablePadding component={Box} display="flex"></List>
       </ListWrapper>
       <Menu anchorEl={ref.current} onClose={handleClose} open={isOpen}>
         <MenuItem sx={{ px: 3 }} component={Link} href="/">

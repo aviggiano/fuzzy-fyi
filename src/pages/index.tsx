@@ -1,10 +1,16 @@
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
 
 const Home = () => {
+  const router = useRouter();
   const session = useSession();
   const supabase = useSupabaseClient();
+
+  if (session) {
+    router.push("/dashboard/jobs");
+  }
 
   return (
     <>
@@ -25,7 +31,7 @@ const Home = () => {
               providers={[]}
             />
           ) : (
-            <span>{JSON.stringify(session)}</span>
+            <span>Welcome {session.user.email}</span>
           )}
         </div>
       </div>

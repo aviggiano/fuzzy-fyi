@@ -7,6 +7,7 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
+import Image from "next/image";
 import Link from "@components/Link";
 
 const LogoWrapper = styled(Link)(
@@ -14,66 +15,11 @@ const LogoWrapper = styled(Link)(
         color: ${theme.palette.text.primary};
         display: flex;
         text-decoration: none;
+        align-items: center;
+        gap: 12px;
         width: 53px;
         margin: 0 auto;
         font-weight: ${theme.typography.fontWeightBold};
-`
-);
-
-const LogoSignWrapper = styled(Box)(
-  () => `
-        width: 52px;
-        height: 38px;
-`
-);
-
-const LogoSign = styled(Box)(
-  ({ theme }) => `
-        background: ${theme.general.reactFrameworkColor};
-        width: 18px;
-        height: 18px;
-        border-radius: ${theme.general.borderRadiusSm};
-        position: relative;
-        transform: rotate(45deg);
-        top: 3px;
-        left: 17px;
-
-        &:after, 
-        &:before {
-            content: "";
-            display: block;
-            width: 18px;
-            height: 18px;
-            position: absolute;
-            top: -1px;
-            right: -20px;
-            transform: rotate(0deg);
-            border-radius: ${theme.general.borderRadiusSm};
-        }
-
-        &:before {
-            background: ${theme.palette.primary.main};
-            right: auto;
-            left: 0;
-            top: 20px;
-        }
-
-        &:after {
-            background: ${theme.palette.secondary.main};
-        }
-`
-);
-
-const LogoSignInner = styled(Box)(
-  ({ theme }) => `
-        width: 16px;
-        height: 16px;
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        z-index: 5;
-        border-radius: ${theme.general.borderRadiusSm};
-        background: ${theme.header.background};
 `
 );
 
@@ -95,32 +41,11 @@ const TooltipWrapper = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 function Logo() {
-  const theme = useTheme();
-
   return (
-    <TooltipWrapper
-      title="Tokyo Free Black Next.js Typescript Admin Dashboard"
-      arrow
-    >
+    <TooltipWrapper title="fuzzy-fyi" arrow>
       <LogoWrapper href="/">
-        <Badge
-          sx={{
-            ".MuiBadge-badge": {
-              fontSize: theme.typography.pxToRem(11),
-              right: -2,
-              top: 8,
-            },
-          }}
-          overlap="circular"
-          color="success"
-          badgeContent="1.0"
-        >
-          <LogoSignWrapper>
-            <LogoSign>
-              <LogoSignInner />
-            </LogoSign>
-          </LogoSignWrapper>
-        </Badge>
+        <Image src="/fuzzy-fyi.png" width="48" height="48" alt="fuzzy-fyi" />
+        <h1>fuzzy.fyi</h1>
       </LogoWrapper>
     </TooltipWrapper>
   );

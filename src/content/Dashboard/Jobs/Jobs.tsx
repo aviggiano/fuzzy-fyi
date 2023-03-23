@@ -228,6 +228,7 @@ function Jobs({ jobs }: { jobs: Job[] }) {
                         fontWeight="bold"
                         color="text.secondary"
                         gutterBottom
+                        maxWidth="220px"
                       >
                         {job.cmd}
                       </Typography>
