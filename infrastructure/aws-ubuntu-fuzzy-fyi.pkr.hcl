@@ -8,7 +8,7 @@ packer {
 }
 
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "fuzzy-fyi-ami-v2"
+  ami_name      = "fuzzy-fyi-ami-v4"
   instance_type = "c5.large"
   region        = "us-east-1"
   source_ami_filter {
@@ -31,7 +31,7 @@ build {
 
   provisioner "file" {
     source = "runner.sh"
-    destination = "/tmp/runner.sh"
+    destination = "/home/ubuntu/runner.sh"
   }
 
   provisioner "shell" {

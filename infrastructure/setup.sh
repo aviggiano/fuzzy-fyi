@@ -15,7 +15,7 @@ cloud-init status --wait
 echo "[$(date)] Install OS libraries"
 sudo apt-get update
 sudo apt-get upgrade -y
-sudo apt-get install -y git gcc make python3-pip unzip
+sudo apt-get install -y git gcc make python3-pip unzip jq
 
 echo "[$(date)] Install AWS CLI"
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"

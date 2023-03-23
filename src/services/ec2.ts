@@ -19,7 +19,7 @@ export async function runInstance({
   });
   const instanceId = data.Instances![0].InstanceId!;
   await waitUntilInstanceRunning(
-    { client: ec2, maxWaitTime: 20 },
+    { client: ec2, maxWaitTime: 60 },
     { InstanceIds: [instanceId] }
   );
 

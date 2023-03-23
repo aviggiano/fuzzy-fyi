@@ -25,7 +25,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
       [
         `#!/usr/bin/env bash`,
         `set -ux`,
-        `sudo su ubuntu -s /tmp/runner.sh`,
+        `sudo su ubuntu -s /home/ubuntu/runner.sh`,
       ].join("\n")
     ).toString("base64"),
   });
