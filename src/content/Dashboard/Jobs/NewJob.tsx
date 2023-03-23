@@ -11,25 +11,21 @@ import { Project } from "@prisma/client";
 
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { useEffect, useState } from "react";
+import { MouseEventHandler, useState } from "react";
+import { useRouter } from "next/router";
 
-function NewJob() {
-  const [project, setProject] = useState<Project>();
-  const [projects, setProjects] = useState<Project[]>([]);
+function NewJob({ projects }: { projects: Project[] }) {
+  const router = useRouter();
+
+  const [active, setIsActive] = useState(true);
+  const [project, setProject] = useState<Project>(projects[0]);
   const [ref, setRef] = useState<string>("main");
   const [cmd, setCmd] = useState<string>();
   const instanceTypes = ["c5.large", "c5.xlarge", "c5.2xlarge"];
   const [instanceType, setInstanceType] = useState<string>(instanceTypes[0]);
-  useEffect(() => {
-    fetch("/api/project")
-      .then((res) => res.json())
-      .then((projects) => {
-        setProjects(projects);
-        setProject(projects[0]);
-      });
-  }, []);
 
   const onClick = () => {
+    setIsActive(false);
     fetch("/api/job", {
       method: "POST",
       body: JSON.stringify({
@@ -38,7 +34,9 @@ function NewJob() {
         ref,
         cmd,
       }),
-    }).then(() => (window.location.href = "/dashboard/jobs"));
+    }).then(() => {
+      router.push("/dashboard/jobs");
+    });
   };
 
   return (
@@ -117,12 +115,13 @@ function NewJob() {
                 </div>
                 <Button
                   sx={{ mt: { xs: 2, md: 0 } }}
-                  variant="contained"
+                  variant={active ? "contained" : "outlined"}
                   style={{
                     marginLeft: "auto",
                     marginRight: "9px",
                   }}
                   onClick={onClick}
+                  disabled={!active}
                 >
                   Create job
                 </Button>

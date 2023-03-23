@@ -7,8 +7,11 @@ import Footer from "@components/Footer";
 
 import NewJob from "@content/Dashboard/Jobs/NewJob";
 import { ReactElement } from "react";
+import { config } from "@config";
+import { GetServerSideProps } from "next";
+import { Project } from "@prisma/client";
 
-function ApplicationsTransactions() {
+function ApplicationsTransactions({ projects }: { projects: Project[] }) {
   return (
     <>
       <Head>
@@ -26,7 +29,7 @@ function ApplicationsTransactions() {
           spacing={3}
         >
           <Grid item xs={12}>
-            <NewJob />
+            <NewJob projects={projects} />
           </Grid>
         </Grid>
       </Container>
@@ -38,5 +41,16 @@ function ApplicationsTransactions() {
 ApplicationsTransactions.getLayout = (page: ReactElement) => (
   <SidebarLayout>{page}</SidebarLayout>
 );
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const res = await fetch(`${config.backend.url}/api/project`);
+  const projects = await res.json();
+
+  return {
+    props: {
+      projects,
+    },
+  };
+};
 
 export default ApplicationsTransactions;
