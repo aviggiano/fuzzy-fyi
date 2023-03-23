@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "npx prisma migrate dev",
+    "infrastructure": "cd infrastructure && packer build"
   },
   "dependencies": {
     "@aws-sdk/client-ec2": "^3.297.0",
