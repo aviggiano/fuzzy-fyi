@@ -22,10 +22,10 @@ const Home = () => {
               supabaseClient={supabase}
               appearance={{ theme: ThemeSupa }}
               theme="dark"
-              providers={["github"]}
+              providers={[]}
             />
           ) : (
-            <span>{session.toString()}</span>
+            <span>{JSON.stringify(session)}</span>
           )}
         </div>
       </div>
