@@ -41,3 +41,5 @@ curl -XPATCH --data '{"status":"FINISHED"}' "$BACKEND_URL/api/job/$JOB_ID"
 
 echo "[$(date)] Finish job"
 curl -XDELETE "$BACKEND_URL/api/job/$JOB_ID"
+
+sudo shutdown -h now
