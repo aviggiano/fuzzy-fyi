@@ -63,9 +63,11 @@ async function GET(request: NextApiRequest, response: NextApiResponse) {
       if (job.status === "DEPROVISIONED") {
         const keys = await s3.listObjects(`job/${job.id}/`);
         const coverage = keys.find((e) => e.endsWith(".html")) as string;
+        const logs = keys.find((e) => e.endsWith("logs.txt")) as string;
         return {
           ...job,
-          logs: coverage ? await s3.getSignedUrl(coverage) : undefined,
+          coverage: coverage ? await s3.getSignedUrl(coverage) : undefined,
+          logs: logs ? await s3.getSignedUrl(logs) : undefined,
         };
       } else {
         return job;
