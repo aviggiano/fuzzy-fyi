@@ -27,6 +27,7 @@ import {
 import Label, { LabelProps } from "@components/Label";
 import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 import DownloadTwoToneIcon from "@mui/icons-material/DownloadTwoTone";
+import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
 import BulkActions from "./BulkActions";
 import { formatDistanceToNow } from "date-fns";
 import { useRouter } from "next/router";
@@ -50,7 +51,7 @@ const getStatusLabel = (jobStatus: JobStatus): JSX.Element => {
   return <Label color={color}>{jobStatus}</Label>;
 };
 
-const applyFilters = (jobs: Job[], filters: Filters): Job[] => {
+const applyFilters = (jobs: JobWithLogs[], filters: Filters): JobWithLogs[] => {
   return jobs.filter((job) => {
     let matches = true;
 
@@ -62,11 +63,19 @@ const applyFilters = (jobs: Job[], filters: Filters): Job[] => {
   });
 };
 
-const applyPagination = (jobs: Job[], page: number, limit: number): Job[] => {
+const applyPagination = (
+  jobs: JobWithLogs[],
+  page: number,
+  limit: number
+): JobWithLogs[] => {
   return jobs.slice(page * limit, page * limit + limit);
 };
 
-function Jobs({ jobs }: { jobs: Job[] }) {
+interface JobWithLogs extends Job {
+  logs?: string;
+}
+
+function Jobs({ jobs }: { jobs: JobWithLogs[] }) {
   const router = useRouter();
   const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
   const selectedBulkActions = selectedJobs.length > 0;
@@ -278,21 +287,40 @@ function Jobs({ jobs }: { jobs: Job[] }) {
                           </IconButton>
                         </Tooltip>
                       ) : (
-                        <Tooltip title="Download Logs" arrow>
-                          <IconButton
-                            sx={{
-                              "&:hover": {
-                                background: theme.colors.info.lighter,
-                              },
-                              color: theme.palette.info.main,
-                            }}
-                            color="inherit"
-                            size="small"
-                            onClick={() => console.log(job.id)}
-                          >
-                            <DownloadTwoToneIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
+                        <>
+                          <Tooltip title="Download Logs" arrow>
+                            <IconButton
+                              sx={{
+                                "&:hover": {
+                                  background: theme.colors.info.lighter,
+                                },
+                                color: theme.palette.info.main,
+                              }}
+                              color="inherit"
+                              size="small"
+                              onClick={() => console.log(job.id)}
+                            >
+                              <DownloadTwoToneIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                          {job.logs ? (
+                            <Tooltip title="View Logs" arrow>
+                              <IconButton
+                                sx={{
+                                  "&:hover": {
+                                    background: theme.colors.info.lighter,
+                                  },
+                                  color: theme.palette.info.main,
+                                }}
+                                color="inherit"
+                                size="small"
+                                onClick={() => window.open(job.logs)}
+                              >
+                                <ArticleTwoToneIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          ) : null}
+                        </>
                       )}
                     </TableCell>
                   </TableRow>

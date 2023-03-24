@@ -3,6 +3,7 @@ import { type Prisma } from "@prisma/client";
 import * as ec2 from "@services/ec2";
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@services/prisma";
+import * as s3 from "@services/s3";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -57,5 +58,19 @@ async function GET(request: NextApiRequest, response: NextApiResponse) {
       createdAt: "desc",
     },
   });
-  response.status(200).json(jobs);
+  const jobsWithLogs = await Promise.all(
+    jobs.map(async (job) => {
+      if (job.status === "DEPROVISIONED") {
+        const keys = await s3.listObjects(`job/${job.id}/`);
+        const coverage = keys.find((e) => e.endsWith(".html")) as string;
+        return {
+          ...job,
+          logs: coverage ? await s3.getSignedUrl(coverage) : undefined,
+        };
+      } else {
+        return job;
+      }
+    })
+  );
+  response.status(200).json(jobsWithLogs);
 }
