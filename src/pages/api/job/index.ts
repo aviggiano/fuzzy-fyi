@@ -4,6 +4,7 @@ import * as ec2 from "@services/ec2";
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@services/prisma";
 import * as s3 from "@services/s3";
+import { config } from "@config";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -25,7 +26,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
       [
         `#!/usr/bin/env bash`,
         `set -ux`,
-        `chmod 755 /home/ubuntu/runner.sh`,
+        `aws s3 cp s3://${config.aws.s3.bucket}/runner/runner.sh /home/ubuntu/runner.sh`,
         `sudo su ubuntu -s /home/ubuntu/runner.sh`,
       ].join("\n")
     ).toString("base64"),
@@ -42,7 +43,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
         },
       },
       instanceId: instanceId,
-      status: JobStatus.PROVISIONED,
+      status: JobStatus.STARTED,
     },
   });
 
@@ -60,7 +61,7 @@ async function GET(request: NextApiRequest, response: NextApiResponse) {
   });
   const jobsWithLogs = await Promise.all(
     jobs.map(async (job) => {
-      if (job.status === "DEPROVISIONED") {
+      if (job.status.startsWith("FINISHED")) {
         const keys = await s3.listObjects(`job/${job.id}/`);
         const coverage = keys.find((e) => e.endsWith(".html")) as string;
         const logs = keys.find((e) => e.endsWith("logs.txt")) as string;

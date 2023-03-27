@@ -33,24 +33,40 @@ model Project {
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
   jobs           Job[]
+  templates      Template[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @default(now()) @updatedAt
 }
 
 enum JobStatus {
-  PROVISIONED
   STARTED
   RUNNING
-  FINISHED
-  DEPROVISIONED
+  FINISHED_SUCCESS
+  FINISHED_ERROR
+}
+
+model Template {
+  id           String   @id @default(uuid())
+  ref          String
+  cmd          String
+  instanceType String
+  project      Project  @relation(fields: [projectId], references: [id])
+  projectId    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+  jobs         Job[]
 }
 
 model Job {
   id           String    @id @default(uuid())
+  templateId   String?
+  template     Template? @relation(fields: [templateId], references: [id])
   ref          String
   cmd          String
   instanceId   String
-  instanceType String    @default("c5.large")
+  instanceType String
+  logsUrl      String?
+  coverageUrl  String?
   status       JobStatus
   project      Project   @relation(fields: [projectId], references: [id])
   projectId    String

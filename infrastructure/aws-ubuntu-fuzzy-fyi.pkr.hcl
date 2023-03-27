@@ -29,11 +29,6 @@ build {
     "source.amazon-ebs.ubuntu"
   ]
 
-  provisioner "file" {
-    source = "runner.sh"
-    destination = "/home/ubuntu/runner.sh"
-  }
-
   provisioner "shell" {
     script = "setup.sh"
   }

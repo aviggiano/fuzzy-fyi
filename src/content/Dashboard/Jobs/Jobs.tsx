@@ -39,11 +39,10 @@ interface Filters {
 
 const getStatusLabel = (jobStatus: JobStatus): JSX.Element => {
   const map: Record<JobStatus, LabelProps["color"]> = {
-    PROVISIONED: "warning",
     STARTED: "info",
     RUNNING: "info",
-    FINISHED: "success",
-    DEPROVISIONED: "success",
+    FINISHED_SUCCESS: "success",
+    FINISHED_ERROR: "error",
   };
 
   const color: LabelProps["color"] = map[jobStatus];
@@ -271,7 +270,7 @@ function Jobs({ jobs }: { jobs: JJobs[] }) {
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      {job.status !== "DEPROVISIONED" ? (
+                      {!job.status.startsWith("FINISHED") ? (
                         <Tooltip title="Stop Job" arrow>
                           <IconButton
                             sx={{

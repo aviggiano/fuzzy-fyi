@@ -30,14 +30,19 @@ aws s3 sync s3://$S3_BUCKET/job/$JOB_ID/ .
 
 echo "[$(date)] Run command"
 JOB_CMD=$(echo $JOB | jq --raw-output '.cmd')
-curl -XPATCH --data '{"status":"RUNNING"}' "$BACKEND_URL/api/job/$JOB_ID"
 echo "[$(date)] '$JOB_CMD'"
 eval $JOB_CMD | tee logs.txt
+if [ $(grep 'failed!' logs.txt | wc -l) -gt 0 ] || [ $(grep 'passed!' logs.txt | wc -l) -eq 0 ]; then
+  sudo dmesg -T | egrep -i 'killed process' >> logs.txt
+  STATUS="FINISHED_ERROR"
+else
+  STATUS="FINISHED_SUCCESS"
+fi
 
 echo "[$(date)] Copy output to S3"
-aws s3 cp logs.txt s3://$S3_BUCKET/job/$JOB_ID/
+aws s3 cp --content-type "text/plain;charset=UTF-8" logs.txt s3://$S3_BUCKET/job/$JOB_ID/
 aws s3 sync $ECHIDNA_DIRECTORY/ s3://$S3_BUCKET/job/$JOB_ID/
-curl -XPATCH --data '{"status":"FINISHED"}' "$BACKEND_URL/api/job/$JOB_ID"
+curl -XPATCH --data "{\"status\":\"$STATUS\"}" "$BACKEND_URL/api/job/$JOB_ID"
 
 echo "[$(date)] Finish job"
 curl -XDELETE "$BACKEND_URL/api/job/$JOB_ID"

@@ -1,4 +1,3 @@
-import { JobStatus } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as ec2 from "@services/ec2";
 import prisma from "@services/prisma";
@@ -51,14 +50,5 @@ async function DELETE(request: NextApiRequest, response: NextApiResponse) {
     instanceId: job.instanceId,
   });
 
-  const updatedJob = await prisma.job.update({
-    where: {
-      id: job.id,
-    },
-    data: {
-      status: JobStatus.DEPROVISIONED,
-    },
-  });
-
-  response.status(200).json(updatedJob);
+  response.status(200).json(job);
 }
