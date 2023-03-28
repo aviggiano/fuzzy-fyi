@@ -52,6 +52,15 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
           id: body.projectId || template?.projectId!,
         },
       },
+      ...(template
+        ? {
+            template: {
+              connect: {
+                id: body.templateId,
+              },
+            },
+          }
+        : {}),
       instanceId: instanceId,
       status: JobStatus.STARTED,
     },
