@@ -18,7 +18,7 @@ cd $WORKDIR
 echo "[$(date)] Fetch job"
 JOB=$(curl "$BACKEND_URL/api/job/instance/$INSTANCE_ID")
 JOB_ID=$(echo $JOB | jq --raw-output '.id')
-TEMPLATE_ID=${$(echo $JOB | jq --raw-output '.templateId'):-undefined}
+TEMPLATE_ID="${$(echo $JOB | jq --raw-output '.templateId'):-undefined}"
 S3_BUCKET=$(echo $JOB | jq --raw-output '.aws.s3.bucket')
 
 echo "[$(date)] Clone project"
