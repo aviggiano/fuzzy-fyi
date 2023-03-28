@@ -29,7 +29,7 @@ import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 import CodeTwoToneIcon from "@mui/icons-material/CodeTwoTone";
 import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
 import BulkActions from "./BulkActions";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, intervalToDuration } from "date-fns";
 import { useRouter } from "next/router";
 import { config } from "@config";
 
@@ -70,6 +70,22 @@ const applyFilters = (jobs: Job[], filters: Filters): Job[] => {
 
 const applyPagination = (jobs: Job[], page: number, limit: number): Job[] => {
   return jobs.slice(page * limit, page * limit + limit);
+};
+
+const interval = (end: Date, start: Date): string => {
+  const ms = end.getTime() - start.getTime();
+  const duration = intervalToDuration({ start: 0, end: ms });
+
+  const zeroPad = (num: number | undefined) => String(num).padStart(2, "0");
+
+  const formatted = [
+    `${zeroPad(duration.hours || 0)}:`,
+    `${zeroPad(duration.minutes || 0)}:`,
+    `${zeroPad(duration.seconds || 0)}`,
+  ]
+    .filter(Boolean)
+    .join("");
+  return formatted;
 };
 
 function Jobs({ jobs }: { jobs: Job[] }) {
@@ -239,6 +255,12 @@ function Jobs({ jobs }: { jobs: Job[] }) {
                         noWrap
                       >
                         {job.instanceId}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" noWrap>
+                        {interval(
+                          new Date(job.updatedAt),
+                          new Date(job.createdAt)
+                        ) + " elapsed"}
                       </Typography>
                     </TableCell>
                     <TableCell>
