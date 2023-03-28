@@ -1,30 +1,24 @@
 import Head from "next/head";
 import SidebarLayout from "@layouts/SidebarLayout";
-import PageHeader from "@content/Dashboard/Jobs/PageHeader";
+import PageHeader from "@content/Dashboard/Templates/PageHeader";
 import PageTitleWrapper from "@components/PageTitleWrapper";
 import { Grid, Container } from "@mui/material";
 import Footer from "@components/Footer";
 
-import NewJob from "@content/Dashboard/Jobs/NewJob";
+import Templates from "@content/Dashboard/Templates/Templates";
 import { ReactElement } from "react";
-import { config } from "@config";
 import { GetServerSideProps } from "next";
-import { Project, Template } from "@prisma/client";
+import { Template } from "@prisma/client";
+import { config } from "@config";
 
-function ApplicationsTransactions({
-  projects,
-  templates,
-}: {
-  projects: Project[];
-  templates: Template[];
-}) {
+function ApplicationsTemplates({ templates }: { templates: Template[] }) {
   return (
     <>
       <Head>
-        <title>Jobs</title>
+        <title>Templates</title>
       </Head>
       <PageTitleWrapper>
-        <PageHeader subtitle="New job" />
+        <PageHeader subtitle="Recent templates" />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -35,7 +29,7 @@ function ApplicationsTransactions({
           spacing={3}
         >
           <Grid item xs={12}>
-            <NewJob projects={projects} templates={templates} />
+            <Templates templates={templates} />
           </Grid>
         </Grid>
       </Container>
@@ -44,22 +38,19 @@ function ApplicationsTransactions({
   );
 }
 
-ApplicationsTransactions.getLayout = (page: ReactElement) => (
+ApplicationsTemplates.getLayout = (page: ReactElement) => (
   <SidebarLayout>{page}</SidebarLayout>
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const [projects, templates] = await Promise.all([
-    fetch(`${config.backend.url}/api/project`).then((res) => res.json()),
-    fetch(`${config.backend.url}/api/template`).then((res) => res.json()),
-  ]);
+  const res = await fetch(`${config.backend.url}/api/template`);
+  const templates = await res.json();
 
   return {
     props: {
-      projects,
       templates,
     },
   };
 };
 
-export default ApplicationsTransactions;
+export default ApplicationsTemplates;

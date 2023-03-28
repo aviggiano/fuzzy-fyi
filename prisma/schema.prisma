@@ -43,11 +43,11 @@ enum JobStatus {
   RUNNING
   FINISHED_SUCCESS
   FINISHED_ERROR
+  STOPPED
 }
 
 model Template {
   id           String   @id @default(uuid())
-  ref          String
   cmd          String
   instanceType String
   project      Project  @relation(fields: [projectId], references: [id])

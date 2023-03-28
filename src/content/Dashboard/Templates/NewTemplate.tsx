@@ -11,57 +11,38 @@ import { Project, Template } from "@prisma/client";
 
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { config } from "@config";
 
-function NewJob({
-  projects,
-  templates,
-}: {
-  projects: Project[];
-  templates: Template[];
-}) {
+function NewTemplate({ projects }: { projects: Project[] }) {
   const router = useRouter();
 
   const [active, setIsActive] = useState(true);
   const [project, setProject] = useState<Project>(projects[0]);
-  const [template, setTemplate] = useState<Template | undefined>();
-  const [ref, setRef] = useState<string>("main");
   const [cmd, setCmd] = useState<string>();
   const instanceTypes = config.aws.ec2.instanceTypes;
   const [instanceType, setInstanceType] = useState<string>(instanceTypes[0]);
 
   const onClick = () => {
     setIsActive(false);
-    fetch(`${config.backend.url}/api/job`, {
+    fetch(`${config.backend.url}/api/template`, {
       method: "POST",
       body: JSON.stringify({
-        projectId: project.id,
-        templateId: template?.id,
+        projectId: project?.id,
         instanceType,
-        ref,
         cmd,
       }),
     }).then(() => {
-      router.push("/dashboard/jobs");
+      router.push("/dashboard/templates");
     });
-  };
-
-  const onChangeTemplate = (e: ChangeEvent<HTMLInputElement>) => {
-    const template = templates.find((t) => t.id === e.target.value)!;
-    const project = projects.find((p) => p.id === template.projectId)!;
-    setTemplate(template);
-    setCmd(template.cmd);
-    setInstanceType(template.instanceType);
-    setProject(project);
   };
 
   return (
     <>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title="New job" />
+          <CardHeader title="New template" />
           <Divider />
           <CardContent>
             <Box
@@ -102,19 +83,6 @@ function NewJob({
                     ))}
                   </TextField>
                   <TextField
-                    id="outlined-select-template"
-                    select
-                    label="Template"
-                    value={template?.id}
-                    onChange={onChangeTemplate}
-                  >
-                    {templates.map((template) => (
-                      <MenuItem key={template.id} value={template.id}>
-                        {template.id}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                  <TextField
                     id="outlined-select-instance-type"
                     select
                     label="Instance Type"
@@ -128,19 +96,11 @@ function NewJob({
                     ))}
                   </TextField>
                   <TextField
-                    required
-                    id="ref"
-                    label="Ref"
-                    defaultValue={ref}
-                    onChange={(e) => setRef(e.target.value)}
-                  />
-                  <TextField
                     fullWidth
                     style={{ width: "420px" }}
                     required
                     id="cmd"
                     label="Command"
-                    value={cmd}
                     onChange={(e) => setCmd(e.target.value)}
                     multiline
                   />
@@ -155,7 +115,7 @@ function NewJob({
                   onClick={onClick}
                   disabled={!active}
                 >
-                  Create job
+                  Create template
                 </Button>
               </div>
             </Box>
@@ -166,4 +126,4 @@ function NewJob({
   );
 }
 
-export default NewJob;
+export default NewTemplate;

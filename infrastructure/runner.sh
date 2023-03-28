@@ -7,6 +7,7 @@ echo "[$(date)] Start runner"
 echo "[$(date)] Setup variables"
 INSTANCE_ID=$(wget -q -O - http://instance-data/latest/meta-data/instance-id)
 BACKEND_URL="https://app.fuzzy.fyi"
+OUTPUT_URL="https://assets.fuzzy.fyi"
 WORKDIR=/home/ubuntu
 ECHIDNA_DIRECTORY=echidna
 
@@ -16,6 +17,7 @@ cd $WORKDIR
 echo "[$(date)] Fetch job"
 JOB=$(curl "$BACKEND_URL/api/job/instance/$INSTANCE_ID")
 JOB_ID=$(echo $JOB | jq --raw-output '.id')
+TEMPLATE_ID=${$(echo $JOB | jq --raw-output '.templateId'):-undefined}
 S3_BUCKET=$(echo $JOB | jq --raw-output '.aws.s3.bucket')
 
 echo "[$(date)] Clone project"
@@ -25,8 +27,12 @@ git clone "$PROJECT_GIT_URL"
 cd "$(basename "$PROJECT_GIT_URL" .git)"
 git checkout "$JOB_REF"
 
-echo "[$(date)] Load previous output from S3"
-aws s3 sync s3://$S3_BUCKET/job/$JOB_ID/ .
+if [ "$TEMPLATE_ID" != "undefined" ]; then
+  echo "[$(date)] Load template output from S3"
+  aws s3 sync s3://$S3_BUCKET/template/$TEMPLATE_ID/ .
+else
+  echo "[$(date)] No template output to download from S3"
+fi
 
 echo "[$(date)] Run command"
 JOB_CMD=$(echo $JOB | jq --raw-output '.cmd')
@@ -41,8 +47,10 @@ fi
 
 echo "[$(date)] Copy output to S3"
 aws s3 cp --content-type "text/plain;charset=UTF-8" logs.txt s3://$S3_BUCKET/job/$JOB_ID/
-aws s3 sync $ECHIDNA_DIRECTORY/ s3://$S3_BUCKET/job/$JOB_ID/
-curl -XPATCH --data "{\"status\":\"$STATUS\"}" "$BACKEND_URL/api/job/$JOB_ID"
+LOGS_URL="$OUTPUT_URL/job/$JOB_ID/logs.txt"
+aws s3 sync $ECHIDNA_DIRECTORY/ s3://$S3_BUCKET/template/$TEMPLATE_ID/
+COVERAGE_URL="$OUTPUT_URL/template/$TEMPLATE_ID/$(find $ECHIDNA_DIRECTORY -name '*.html' | tail -n1)"
+curl -XPATCH --data "{\"status\":\"$STATUS\",\"logsUrl\":\"$LOGS_URL\",\"coverageUrl\":\"$COVERAGE_URL\"}" "$BACKEND_URL/api/job/$JOB_ID"
 
 echo "[$(date)] Finish job"
 curl -XDELETE "$BACKEND_URL/api/job/$JOB_ID"

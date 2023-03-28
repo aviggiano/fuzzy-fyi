@@ -16,9 +16,18 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
 async function POST(request: NextApiRequest, response: NextApiResponse) {
   const body: Prisma.JobCreateInput & {
-    projectId: string;
+    projectId?: string;
+    templateId?: string;
     instanceType: string;
   } = JSON.parse(request.body);
+
+  const template = body.templateId
+    ? await prisma.template.findFirst({
+        where: {
+          id: body.templateId.toString(),
+        },
+      })
+    : null;
 
   const instanceId = await ec2.runInstance({
     instanceType: body.instanceType,
@@ -35,11 +44,11 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
   const job = await prisma.job.create({
     data: {
       ref: body.ref,
-      cmd: body.cmd,
-      instanceType: body.instanceType,
+      cmd: body.cmd || template?.cmd!,
+      instanceType: body.instanceType || template?.instanceType!,
       project: {
         connect: {
-          id: body.projectId,
+          id: body.projectId || template?.projectId!,
         },
       },
       instanceId: instanceId,

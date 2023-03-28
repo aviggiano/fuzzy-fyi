@@ -37,20 +37,24 @@ interface Filters {
   status?: JobStatus;
 }
 
-const getStatusLabel = (jobStatus: JobStatus): JSX.Element => {
-  const map: Record<JobStatus, LabelProps["color"]> = {
-    STARTED: "info",
-    RUNNING: "info",
-    FINISHED_SUCCESS: "success",
-    FINISHED_ERROR: "error",
-  };
-
-  const color: LabelProps["color"] = map[jobStatus];
-
-  return <Label color={color}>{jobStatus}</Label>;
+const color: Record<JobStatus, LabelProps["color"]> = {
+  STARTED: "info",
+  RUNNING: "info",
+  FINISHED_SUCCESS: "success",
+  FINISHED_ERROR: "error",
+};
+const label: Record<JobStatus, string> = {
+  STARTED: "Started",
+  RUNNING: "Running",
+  FINISHED_SUCCESS: "Success",
+  FINISHED_ERROR: "Error",
 };
 
-const applyFilters = (jobs: JJobs[], filters: Filters): JJobs[] => {
+const getStatusLabel = (jobStatus: JobStatus): JSX.Element => {
+  return <Label color={color[jobStatus]}>{label[jobStatus]}</Label>;
+};
+
+const applyFilters = (jobs: Job[], filters: Filters): Job[] => {
   return jobs.filter((job) => {
     let matches = true;
 
@@ -62,20 +66,11 @@ const applyFilters = (jobs: JJobs[], filters: Filters): JJobs[] => {
   });
 };
 
-const applyPagination = (
-  jobs: JJobs[],
-  page: number,
-  limit: number
-): JJobs[] => {
+const applyPagination = (jobs: Job[], page: number, limit: number): Job[] => {
   return jobs.slice(page * limit, page * limit + limit);
 };
 
-interface JJobs extends Job {
-  logs?: string;
-  coverage?: string;
-}
-
-function Jobs({ jobs }: { jobs: JJobs[] }) {
+function Jobs({ jobs }: { jobs: Job[] }) {
   const router = useRouter();
   const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
   const selectedBulkActions = selectedJobs.length > 0;
@@ -86,8 +81,8 @@ function Jobs({ jobs }: { jobs: JJobs[] }) {
   });
 
   const statusOptions = Object.keys(JobStatus).map((status) => ({
-    id: status,
-    name: status,
+    id: status as string,
+    name: label[status as JobStatus],
   }));
 
   const handleStatusChange = (e: SelectChangeEvent): void => {
@@ -167,7 +162,7 @@ function Jobs({ jobs }: { jobs: JJobs[] }) {
                 </FormControl>
               </Box>
             }
-            title="Jobs"
+            title="Job"
           />
         )}
         <Divider />
@@ -184,7 +179,6 @@ function Jobs({ jobs }: { jobs: JJobs[] }) {
                   />
                 </TableCell>
                 <TableCell>Job ID</TableCell>
-                <TableCell>Ref</TableCell>
                 <TableCell>Command</TableCell>
                 <TableCell>Instance ID</TableCell>
                 <TableCell>Project</TableCell>
@@ -224,20 +218,9 @@ function Jobs({ jobs }: { jobs: JJobs[] }) {
                       <Typography
                         variant="body1"
                         fontWeight="bold"
-                        color="text.primary"
-                        gutterBottom
-                        noWrap
-                      >
-                        {job.ref}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
                         color="text.secondary"
                         gutterBottom
-                        maxWidth="220px"
+                        maxWidth="260px"
                       >
                         {job.cmd}
                       </Typography>
@@ -288,7 +271,7 @@ function Jobs({ jobs }: { jobs: JJobs[] }) {
                         </Tooltip>
                       ) : (
                         <>
-                          {job.coverage ? (
+                          {job.coverageUrl ? (
                             <Tooltip title="View Coverage" arrow>
                               <IconButton
                                 sx={{
@@ -299,13 +282,13 @@ function Jobs({ jobs }: { jobs: JJobs[] }) {
                                 }}
                                 color="inherit"
                                 size="small"
-                                onClick={() => window.open(job.coverage)}
+                                onClick={() => window.open(job.coverageUrl!)}
                               >
                                 <CodeTwoToneIcon fontSize="small" />
                               </IconButton>
                             </Tooltip>
                           ) : null}
-                          {job.logs ? (
+                          {job.logsUrl ? (
                             <Tooltip title="View Logs" arrow>
                               <IconButton
                                 sx={{
@@ -316,7 +299,7 @@ function Jobs({ jobs }: { jobs: JJobs[] }) {
                                 }}
                                 color="inherit"
                                 size="small"
-                                onClick={() => window.open(job.logs)}
+                                onClick={() => window.open(job.logsUrl!)}
                               >
                                 <ArticleTwoToneIcon fontSize="small" />
                               </IconButton>

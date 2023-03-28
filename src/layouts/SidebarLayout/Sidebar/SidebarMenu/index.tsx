@@ -194,6 +194,21 @@ function SidebarMenu() {
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
+                <NextLink href="/dashboard/templates" passHref>
+                  <Button
+                    className={
+                      currentRoute === "/dashboard/templates" ? "active" : ""
+                    }
+                    disableRipple
+                    component="a"
+                    onClick={closeSidebar}
+                    startIcon={<FilterVintageTwoToneIcon />}
+                  >
+                    Templates
+                  </Button>
+                </NextLink>
+              </ListItem>
+              <ListItem component="div">
                 <NextLink href="/dashboard/jobs" passHref>
                   <Button
                     className={

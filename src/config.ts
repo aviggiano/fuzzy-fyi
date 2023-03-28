@@ -7,6 +7,7 @@ export const config = {
       instanceProfileArn:
         process.env.AAWS_EC2_INSTANCE_PROFILE_ARN ||
         process.env.AWS_EC2_INSTANCE_PROFILE_ARN!,
+      instanceTypes: ["c5.large", "c5.xlarge", "c5.2xlarge"],
     },
     s3: {
       bucket: process.env.AAWS_S3_BUCKET || process.env.AWS_S3_BUCKET!,

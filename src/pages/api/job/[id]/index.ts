@@ -40,7 +40,7 @@ async function PATCH(request: NextApiRequest, response: NextApiResponse) {
 
 async function DELETE(request: NextApiRequest, response: NextApiResponse) {
   const { query } = request;
-  const job = await prisma.job.findUniqueOrThrow({
+  let job = await prisma.job.findUniqueOrThrow({
     where: {
       id: query.id?.toString(),
     },
@@ -49,6 +49,17 @@ async function DELETE(request: NextApiRequest, response: NextApiResponse) {
   await ec2.terminateInstance({
     instanceId: job.instanceId,
   });
+
+  if (!job.status.startsWith("FINISHED")) {
+    job = await prisma.job.update({
+      data: {
+        // status: 'STOPPED'
+      },
+      where: {
+        id: query.id?.toString(),
+      },
+    });
+  }
 
   response.status(200).json(job);
 }

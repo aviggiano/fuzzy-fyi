@@ -1,30 +1,24 @@
 import Head from "next/head";
 import SidebarLayout from "@layouts/SidebarLayout";
-import PageHeader from "@content/Dashboard/Jobs/PageHeader";
+import PageHeader from "@content/Dashboard/Templates/PageHeader";
 import PageTitleWrapper from "@components/PageTitleWrapper";
 import { Grid, Container } from "@mui/material";
 import Footer from "@components/Footer";
 
-import NewJob from "@content/Dashboard/Jobs/NewJob";
+import NewTemplate from "@content/Dashboard/Templates/NewTemplate";
 import { ReactElement } from "react";
 import { config } from "@config";
 import { GetServerSideProps } from "next";
-import { Project, Template } from "@prisma/client";
+import { Project } from "@prisma/client";
 
-function ApplicationsTransactions({
-  projects,
-  templates,
-}: {
-  projects: Project[];
-  templates: Template[];
-}) {
+function ApplicationsTransactions({ projects }: { projects: Project[] }) {
   return (
     <>
       <Head>
-        <title>Jobs</title>
+        <title>Templates</title>
       </Head>
       <PageTitleWrapper>
-        <PageHeader subtitle="New job" />
+        <PageHeader subtitle="New template" />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -35,7 +29,7 @@ function ApplicationsTransactions({
           spacing={3}
         >
           <Grid item xs={12}>
-            <NewJob projects={projects} templates={templates} />
+            <NewTemplate projects={projects} />
           </Grid>
         </Grid>
       </Container>
@@ -49,15 +43,12 @@ ApplicationsTransactions.getLayout = (page: ReactElement) => (
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const [projects, templates] = await Promise.all([
-    fetch(`${config.backend.url}/api/project`).then((res) => res.json()),
-    fetch(`${config.backend.url}/api/template`).then((res) => res.json()),
-  ]);
-
+  const projects = await fetch(`${config.backend.url}/api/project`).then(
+    (res) => res.json()
+  );
   return {
     props: {
       projects,
-      templates,
     },
   };
 };
