@@ -25,7 +25,7 @@ async function GET(request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function PATCH(request: NextApiRequest, response: NextApiResponse) {
-  const { body, query } = request;
+  const { query, body } = request;
 
   const job = await prisma.job.update({
     data: {

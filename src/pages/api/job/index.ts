@@ -81,13 +81,16 @@ async function GET(request: NextApiRequest, response: NextApiResponse) {
   const jobsWithLogs = await Promise.all(
     jobs.map(async (job) => {
       if (job.status.startsWith("FINISHED")) {
-        const keys = await s3.listObjects(`job/${job.id}/`);
-        const coverage = keys.find((e) => e.endsWith(".html")) as string;
-        const logs = keys.find((e) => e.endsWith("logs.txt")) as string;
+        const coverageUrl = await s3.getSignedUrl(
+          job.coverageUrl!.replace(`${config.backend.outputUrl}/`, "")
+        );
+        const logsUrl = await s3.getSignedUrl(
+          job.logsUrl!.replace(`${config.backend.outputUrl}/`, "")
+        );
         return {
           ...job,
-          coverage: coverage ? await s3.getSignedUrl(coverage) : undefined,
-          logs: logs ? await s3.getSignedUrl(logs) : undefined,
+          coverageUrl,
+          logsUrl,
         };
       } else {
         return job;

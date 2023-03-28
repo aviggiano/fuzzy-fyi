@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { JobStatus, Job, Project } from "@prisma/client";
 import {
   Tooltip,
@@ -72,21 +72,37 @@ const applyPagination = (jobs: Job[], page: number, limit: number): Job[] => {
   return jobs.slice(page * limit, page * limit + limit);
 };
 
-const interval = (end: Date, start: Date): string => {
-  const ms = end.getTime() - start.getTime();
-  const duration = intervalToDuration({ start: 0, end: ms });
+function Interval({ job }: { job: Job }) {
+  const [formatted, setFormatted] = useState("");
 
-  const zeroPad = (num: number | undefined) => String(num).padStart(2, "0");
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const end =
+        job.status.startsWith("FINISHED") || job.status === "STOPPED"
+          ? new Date(job.updatedAt)
+          : new Date();
+      const start = new Date(job.createdAt);
+      const ms = end.getTime() - start.getTime();
+      const duration = intervalToDuration({ start: 0, end: ms });
 
-  const formatted = [
-    `${zeroPad(duration.hours || 0)}:`,
-    `${zeroPad(duration.minutes || 0)}:`,
-    `${zeroPad(duration.seconds || 0)}`,
-  ]
-    .filter(Boolean)
-    .join("");
-  return formatted;
-};
+      const zeroPad = (num: number | undefined) => String(num).padStart(2, "0");
+
+      const newFormatted = [
+        `${zeroPad(duration.hours || 0)}:`,
+        `${zeroPad(duration.minutes || 0)}:`,
+        `${zeroPad(duration.seconds || 0)}`,
+      ]
+        .filter(Boolean)
+        .join("");
+
+      setFormatted(newFormatted);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [job]);
+
+  return <>{formatted}</>;
+}
 
 function Jobs({ jobs }: { jobs: Job[] }) {
   const router = useRouter();
@@ -201,7 +217,7 @@ function Jobs({ jobs }: { jobs: Job[] }) {
                 </TableCell>
                 <TableCell>Job ID</TableCell>
                 <TableCell>Command</TableCell>
-                <TableCell>Instance ID</TableCell>
+                <TableCell>Instance</TableCell>
                 <TableCell>Project</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell align="right">Actions</TableCell>
@@ -256,14 +272,16 @@ function Jobs({ jobs }: { jobs: Job[] }) {
                       >
                         {job.instanceId}
                       </Typography>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        color="text.secondary"
+                        noWrap
+                      >
+                        {job.instanceType}
+                      </Typography>
                       <Typography variant="body2" color="text.secondary" noWrap>
-                        {interval(
-                          job.status.startsWith("FINISHED") ||
-                            job.status === "STOPPED"
-                            ? new Date(job.updatedAt)
-                            : new Date(),
-                          new Date(job.createdAt)
-                        ) + " elapsed"}
+                        <Interval job={job} />
                       </Typography>
                     </TableCell>
                     <TableCell>

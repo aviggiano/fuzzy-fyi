@@ -18,6 +18,7 @@ export const config = {
       process.env.NODE_ENV === "production"
         ? "https://app.fuzzy.fyi"
         : "http://localhost:3000",
+    outputUrl: "https://assets.fuzzy.fyi",
   },
   runner: {
     jobId: process.env.JOB_ID!,

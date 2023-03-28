@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -ux
+set -x
 
 echo "[$(date)] Start runner"
 sleep 10
@@ -50,9 +50,9 @@ echo "[$(date)] Copy output to S3"
 aws s3 cp --content-type "text/plain;charset=UTF-8" logs.txt s3://$S3_BUCKET/job/$JOB_ID/
 aws s3 cp --content-type "text/plain;charset=UTF-8" /var/log/cloud-init-output.log s3://$S3_BUCKET/job/$JOB_ID/
 LOGS_URL="$OUTPUT_URL/job/$JOB_ID/logs.txt"
-aws s3 sync $ECHIDNA_DIRECTORY/ s3://$S3_BUCKET/template/$TEMPLATE_ID/
+aws s3 sync $ECHIDNA_DIRECTORY/ s3://$S3_BUCKET/template/$TEMPLATE_ID/$ECHIDNA_DIRECTORY/
 COVERAGE_URL="$OUTPUT_URL/template/$TEMPLATE_ID/$(find $ECHIDNA_DIRECTORY -name '*.html' | tail -n1)"
-curl -XPATCH --data "{\"status\":\"$STATUS\",\"logsUrl\":\"$LOGS_URL\",\"coverageUrl\":\"$COVERAGE_URL\"}" "$BACKEND_URL/api/job/$JOB_ID"
+curl -XPATCH -H 'Content-Type: application/json' --data "{\"status\":\"$STATUS\",\"logsUrl\":\"$LOGS_URL\",\"coverageUrl\":\"$COVERAGE_URL\"}" "$BACKEND_URL/api/job/$JOB_ID"
 
 echo "[$(date)] Finish job"
 curl -XDELETE "$BACKEND_URL/api/job/$JOB_ID"
