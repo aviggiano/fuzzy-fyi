@@ -58,18 +58,19 @@ model Template {
 }
 
 model Job {
-  id           String    @id @default(uuid())
-  templateId   String?
-  template     Template? @relation(fields: [templateId], references: [id])
-  ref          String
-  cmd          String
-  instanceId   String
-  instanceType String
-  logsUrl      String?
-  coverageUrl  String?
-  status       JobStatus
-  project      Project   @relation(fields: [projectId], references: [id])
-  projectId    String
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @default(now()) @updatedAt
+  id                String    @id @default(uuid())
+  templateId        String?
+  template          Template? @relation(fields: [templateId], references: [id])
+  ref               String
+  cmd               String
+  instanceId        String
+  instanceType      String
+  logsUrl           String?
+  coverageUrl       String?
+  pullRequestNumber String?
+  status            JobStatus
+  project           Project   @relation(fields: [projectId], references: [id])
+  projectId         String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @default(now()) @updatedAt
 }

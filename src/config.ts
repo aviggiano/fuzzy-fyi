@@ -13,6 +13,11 @@ export const config = {
       bucket: process.env.AAWS_S3_BUCKET || process.env.AWS_S3_BUCKET!,
     },
   },
+  github: {
+    auth: {
+      token: process.env.GITHUB_AUTH_TOKEN!,
+    },
+  },
   backend: {
     url:
       process.env.NODE_ENV === "production"

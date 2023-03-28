@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as ec2 from "@services/ec2";
+import * as github from "@services/github";
 import prisma from "@services/prisma";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -7,8 +8,25 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     GET,
     PATCH,
     DELETE,
+    POST,
   };
   return handlers[req.method as string](req, res);
+}
+
+async function POST(request: NextApiRequest, response: NextApiResponse) {
+  const { query } = request;
+  const job = await prisma.job.findUniqueOrThrow({
+    where: {
+      id: query.id?.toString(),
+    },
+    include: {
+      project: true,
+    },
+  });
+  if (job.pullRequestNumber) {
+    await github.createComment(job, job.pullRequestNumber);
+  }
+  response.status(200).json(job);
 }
 
 async function GET(request: NextApiRequest, response: NextApiResponse) {
@@ -44,14 +62,23 @@ async function DELETE(request: NextApiRequest, response: NextApiResponse) {
     where: {
       id: query.id?.toString(),
     },
+    include: {
+      project: true,
+    },
   });
 
   await ec2.terminateInstance({
     instanceId: job.instanceId,
   });
 
-  if (!job.status.startsWith("FINISHED")) {
-    job = await prisma.job.update({
+  if (job.pullRequestNumber) {
+    await github.createComment(job, job.pullRequestNumber);
+  }
+
+  if (job.status.startsWith("FINISHED")) {
+    response.status(200).json(job);
+  } else {
+    const updatedJob = await prisma.job.update({
       data: {
         status: "STOPPED",
       },
@@ -59,7 +86,6 @@ async function DELETE(request: NextApiRequest, response: NextApiResponse) {
         id: query.id?.toString(),
       },
     });
+    response.status(200).json(updatedJob);
   }
-
-  response.status(200).json(job);
 }

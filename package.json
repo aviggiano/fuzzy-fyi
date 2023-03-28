@@ -22,6 +22,7 @@
     "@mui/material": "^5.11.14",
     "@mui/styles": "^5.11.13",
     "@mui/x-date-pickers": "^6.0.2",
+    "@octokit/rest": "^19.0.7",
     "@prisma/client": "^4.11.0",
     "@supabase/auth-helpers-nextjs": "^0.5.6",
     "@supabase/auth-helpers-react": "^0.3.1",

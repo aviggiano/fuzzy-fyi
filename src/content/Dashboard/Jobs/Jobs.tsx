@@ -24,33 +24,19 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 
-import Label, { LabelProps } from "@components/Label";
+import Label from "@components/Label";
 import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 import CodeTwoToneIcon from "@mui/icons-material/CodeTwoTone";
 import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
 import BulkActions from "./BulkActions";
-import { formatDistanceToNow, intervalToDuration } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { useRouter } from "next/router";
 import { config } from "@config";
+import { color, formatTimeElapsed, label } from "@services/jobUtils";
 
 interface Filters {
   status?: JobStatus;
 }
-
-const color: Record<JobStatus, LabelProps["color"]> = {
-  STARTED: "info",
-  RUNNING: "info",
-  FINISHED_SUCCESS: "success",
-  FINISHED_ERROR: "error",
-  STOPPED: "warning",
-};
-const label: Record<JobStatus, string> = {
-  STARTED: "Started",
-  RUNNING: "Running",
-  FINISHED_SUCCESS: "Success",
-  FINISHED_ERROR: "Error",
-  STOPPED: "Stopped",
-};
 
 const getStatusLabel = (jobStatus: JobStatus): JSX.Element => {
   return <Label color={color[jobStatus]}>{label[jobStatus]}</Label>;
@@ -77,25 +63,7 @@ function Interval({ job }: { job: Job }) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const end =
-        job.status.startsWith("FINISHED") || job.status === "STOPPED"
-          ? new Date(job.updatedAt)
-          : new Date();
-      const start = new Date(job.createdAt);
-      const ms = end.getTime() - start.getTime();
-      const duration = intervalToDuration({ start: 0, end: ms });
-
-      const zeroPad = (num: number | undefined) => String(num).padStart(2, "0");
-
-      const newFormatted = [
-        `${zeroPad(duration.hours || 0)}:`,
-        `${zeroPad(duration.minutes || 0)}:`,
-        `${zeroPad(duration.seconds || 0)}`,
-      ]
-        .filter(Boolean)
-        .join("");
-
-      setFormatted(newFormatted);
+      setFormatted(formatTimeElapsed(job));
     }, 1000);
 
     return () => clearInterval(interval);
