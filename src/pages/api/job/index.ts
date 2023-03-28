@@ -16,6 +16,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function POST(request: NextApiRequest, response: NextApiResponse) {
+  console.log(request.body);
   const body: Prisma.JobCreateInput & {
     projectId?: string;
     templateId?: string;

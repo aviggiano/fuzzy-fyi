@@ -7,7 +7,7 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-import { Project, Template } from "@prisma/client";
+import { Project } from "@prisma/client";
 
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
