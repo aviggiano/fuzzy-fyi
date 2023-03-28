@@ -20,7 +20,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
     projectId?: string;
     templateId?: string;
     instanceType: string;
-  } = JSON.parse(request.body);
+  } = request.body;
 
   const template = body.templateId
     ? await prisma.template.findFirst({
