@@ -35,7 +35,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
       [
         `#!/usr/bin/env bash`,
         `set -ux`,
-        `aws s3 cp s3://${config.aws.s3.bucket}/runner/runner.sh /home/ubuntu/runner.sh`,
+        `aws s3 cp s3://${config.aws.s3.bucket}/infrastructure/runner.sh /home/ubuntu/runner.sh`,
         `sudo su ubuntu -s /home/ubuntu/runner.sh`,
       ].join("\n")
     ).toString("base64"),
