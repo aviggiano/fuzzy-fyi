@@ -10,6 +10,7 @@ export async function middleware(req: NextRequest) {
   } = await supabase.auth.getSession();
 
   if (session?.user.email) {
+    // Check for session.user.id against Users table
     return res;
   } else {
     const redirectUrl = req.nextUrl.clone();

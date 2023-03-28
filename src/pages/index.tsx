@@ -31,7 +31,9 @@ const Home = () => {
               providers={[]}
             />
           ) : (
-            <span>Welcome {session.user.email}</span>
+            <span style={{ textAlign: "center" }}>
+              Welcome {session.user.email}
+            </span>
           )}
         </div>
       </div>

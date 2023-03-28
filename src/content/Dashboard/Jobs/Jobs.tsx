@@ -258,7 +258,11 @@ function Jobs({ jobs }: { jobs: Job[] }) {
                       </Typography>
                       <Typography variant="body2" color="text.secondary" noWrap>
                         {interval(
-                          new Date(job.updatedAt),
+                          new Date(
+                            job.status === "RUNNING"
+                              ? new Date()
+                              : job.updatedAt
+                          ),
                           new Date(job.createdAt)
                         ) + " elapsed"}
                       </Typography>
