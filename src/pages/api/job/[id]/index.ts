@@ -75,17 +75,18 @@ async function DELETE(request: NextApiRequest, response: NextApiResponse) {
     await github.createComment(job, job.pullRequestNumber);
   }
 
-  if (job.status.startsWith("FINISHED")) {
-    response.status(200).json(job);
-  } else {
-    const updatedJob = await prisma.job.update({
+  if (!job.status.startsWith("FINISHED")) {
+    job = await prisma.job.update({
       data: {
         status: "STOPPED",
       },
       where: {
         id: query.id?.toString(),
       },
+      include: {
+        project: true,
+      },
     });
-    response.status(200).json(updatedJob);
   }
+  response.status(200).json(job);
 }

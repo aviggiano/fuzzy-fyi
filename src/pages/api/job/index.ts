@@ -4,6 +4,7 @@ import * as ec2 from "@services/ec2";
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@services/prisma";
 import * as s3 from "@services/s3";
+import * as github from "@services/github";
 import { config } from "@config";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -64,7 +65,14 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
       instanceId: instanceId,
       status: JobStatus.STARTED,
     },
+    include: {
+      project: true,
+    },
   });
+
+  if (job.pullRequestNumber) {
+    await github.createComment(job, job.pullRequestNumber);
+  }
 
   response.status(200).json(job);
 }
