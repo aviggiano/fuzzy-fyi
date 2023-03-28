@@ -3,6 +3,7 @@
 set -ux
 
 echo "[$(date)] Start runner"
+sleep 10
 
 echo "[$(date)] Setup variables"
 INSTANCE_ID=$(wget -q -O - http://instance-data/latest/meta-data/instance-id)
