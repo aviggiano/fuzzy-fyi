@@ -36,6 +36,10 @@ function NewJob({
     setIsActive(false);
     fetch(`${config.backend.url}/api/job`, {
       method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         projectId: project.id,
         templateId: template?.id,

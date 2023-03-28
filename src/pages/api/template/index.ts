@@ -10,11 +10,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function POST(request: NextApiRequest, response: NextApiResponse) {
-  const body = JSON.parse(request.body);
+  const { body } = request;
 
   const template = await prisma.template.create({
     data: {
-      ...body
+      ...body,
     },
   });
 

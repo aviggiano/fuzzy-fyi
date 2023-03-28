@@ -28,6 +28,10 @@ function NewTemplate({ projects }: { projects: Project[] }) {
     setIsActive(false);
     fetch(`${config.backend.url}/api/template`, {
       method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         projectId: project?.id,
         instanceType,

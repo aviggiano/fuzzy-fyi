@@ -12,7 +12,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
 async function POST(request: NextApiRequest, response: NextApiResponse) {
   const body: Prisma.ProjectCreateInput & { organizationId: string } =
-    JSON.parse(request.body);
+    request.body;
 
   const project = await prisma.project.create({
     data: {
