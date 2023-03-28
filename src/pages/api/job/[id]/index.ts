@@ -53,7 +53,7 @@ async function DELETE(request: NextApiRequest, response: NextApiResponse) {
   if (!job.status.startsWith("FINISHED")) {
     job = await prisma.job.update({
       data: {
-        // status: 'STOPPED'
+        status: "STOPPED",
       },
       where: {
         id: query.id?.toString(),

@@ -42,12 +42,14 @@ const color: Record<JobStatus, LabelProps["color"]> = {
   RUNNING: "info",
   FINISHED_SUCCESS: "success",
   FINISHED_ERROR: "error",
+  STOPPED: "warning",
 };
 const label: Record<JobStatus, string> = {
   STARTED: "Started",
   RUNNING: "Running",
   FINISHED_SUCCESS: "Success",
   FINISHED_ERROR: "Error",
+  STOPPED: "Stopped",
 };
 
 const getStatusLabel = (jobStatus: JobStatus): JSX.Element => {
@@ -73,6 +75,7 @@ const applyPagination = (jobs: Job[], page: number, limit: number): Job[] => {
 function Jobs({ jobs }: { jobs: Job[] }) {
   const router = useRouter();
   const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
+  const [active, setActive] = useState(true);
   const selectedBulkActions = selectedJobs.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
@@ -119,10 +122,12 @@ function Jobs({ jobs }: { jobs: Job[] }) {
   };
 
   const deleteJob = (jobId: string): void => {
+    setActive(false);
     fetch(`${config.backend.url}/api/job/${jobId}`, {
       method: "DELETE",
     }).then(() => {
       router.push("/dashboard/jobs");
+      setActive(true);
     });
   };
 
@@ -253,7 +258,8 @@ function Jobs({ jobs }: { jobs: Job[] }) {
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      {!job.status.startsWith("FINISHED") ? (
+                      {!job.status.startsWith("FINISHED") &&
+                      job.status !== "STOPPED" ? (
                         <Tooltip title="Stop Job" arrow>
                           <IconButton
                             sx={{
@@ -265,6 +271,7 @@ function Jobs({ jobs }: { jobs: Job[] }) {
                             color="inherit"
                             size="small"
                             onClick={() => deleteJob(job.id)}
+                            disabled={!active}
                           >
                             <CancelTwoToneIcon fontSize="small" />
                           </IconButton>
