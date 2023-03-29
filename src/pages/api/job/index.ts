@@ -50,6 +50,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
       ref: body.ref,
       cmd: body.cmd || template?.cmd!,
       instanceType: body.instanceType || template?.instanceType!,
+      pullRequestNumber: body.pullRequestNumber,
       project: {
         connect: {
           id: body.projectId || template?.projectId!,
