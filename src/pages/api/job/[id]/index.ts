@@ -85,9 +85,8 @@ async function DELETE(request: NextApiRequest, response: NextApiResponse) {
         project: true,
       },
     });
+    await github.createComment(job);
   }
-
-  await github.createComment(job);
 
   response.status(200).json(job);
 }
