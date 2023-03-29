@@ -200,7 +200,6 @@ function SidebarMenu() {
                       currentRoute === "/dashboard/templates" ? "active" : ""
                     }
                     disableRipple
-                    component="a"
                     onClick={closeSidebar}
                     startIcon={<FilterVintageTwoToneIcon />}
                   >
@@ -215,7 +214,6 @@ function SidebarMenu() {
                       currentRoute === "/dashboard/jobs" ? "active" : ""
                     }
                     disableRipple
-                    component="a"
                     onClick={closeSidebar}
                     startIcon={<BrightnessLowTwoToneIcon />}
                   >
@@ -243,7 +241,6 @@ function SidebarMenu() {
                       currentRoute === "/management/profile" ? "active" : ""
                     }
                     disableRipple
-                    component="a"
                     onClick={closeSidebar}
                     startIcon={<AccountCircleTwoToneIcon />}
                   >
@@ -260,7 +257,6 @@ function SidebarMenu() {
                         : ""
                     }
                     disableRipple
-                    component="a"
                     onClick={closeSidebar}
                     startIcon={<DisplaySettingsTwoToneIcon />}
                   >

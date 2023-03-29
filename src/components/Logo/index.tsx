@@ -1,19 +1,4 @@
-import { Box, styled, Tooltip } from "@mui/material";
-import Link from "@components/Link";
-
-const LogoWrapper = styled(Link)(
-  ({ theme }) => `
-        color: ${theme.palette.text.primary};
-        padding: ${theme.spacing(0, 1, 0, 0)};
-        display: flex;
-        text-decoration: none;
-        font-weight: ${theme.typography.fontWeightBold};
-
-        &:hover {
-          text-decoration: none;
-        }
-`
-);
+import { Box, styled } from "@mui/material";
 
 const LogoSignWrapper = styled(Box)(
   () => `
@@ -102,7 +87,7 @@ const LogoText = styled(Box)(
 
 function Logo() {
   return (
-    <LogoWrapper href="/">
+    <>
       <LogoSignWrapper>
         <LogoSign>
           <LogoSignInner />
@@ -115,13 +100,10 @@ function Logo() {
         }}
       >
         <LogoTextWrapper>
-          <Tooltip title="Version 1.0" arrow placement="right">
-            <VersionBadge>1.0</VersionBadge>
-          </Tooltip>
           <LogoText>fuzzy.fyi</LogoText>
         </LogoTextWrapper>
       </Box>
-    </LogoWrapper>
+    </>
   );
 }
 

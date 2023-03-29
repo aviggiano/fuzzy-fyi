@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 
 import SidebarMenu from "./SidebarMenu";
-import Logo from "@components/LogoSign";
+import LogoSign from "@components/LogoSign";
 
 const SidebarWrapper = styled(Box)(
   ({ theme }) => `
@@ -61,7 +61,7 @@ function Sidebar() {
                 width: 52,
               }}
             >
-              <Logo />
+              <LogoSign />
             </Box>
           </Box>
           <Divider
@@ -88,7 +88,7 @@ function Sidebar() {
             size="small"
             fullWidth
           >
-            Upgrade to PRO
+            BETA
           </Button>
         </Box>
       </SidebarWrapper>
@@ -118,7 +118,7 @@ function Sidebar() {
                   width: 52,
                 }}
               >
-                <Logo />
+                <LogoSign />
               </Box>
             </Box>
             <Divider

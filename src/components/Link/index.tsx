@@ -1,18 +1,18 @@
-import * as React from 'react';
-import clsx from 'clsx';
-import { useRouter } from 'next/router';
-import NextLink, { LinkProps as NextLinkProps } from 'next/link';
-import MuiLink, { LinkProps as MuiLinkProps } from '@mui/material/Link';
-import { styled } from '@mui/material/styles';
+import * as React from "react";
+import clsx from "clsx";
+import { useRouter } from "next/router";
+import NextLink, { LinkProps as NextLinkProps } from "next/link";
+import MuiLink, { LinkProps as MuiLinkProps } from "@mui/material/Link";
+import { styled } from "@mui/material/styles";
 
 // Add support for the sx prop for consistency with the other branches.
-const Anchor = styled('a')({});
+const Anchor = styled("a")({});
 
 interface NextLinkComposedProps
-  extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>,
-    Omit<NextLinkProps, 'href' | 'as' | 'onClick' | 'onMouseEnter'> {
-  to: NextLinkProps['href'];
-  linkAs?: NextLinkProps['as'];
+  extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href">,
+    Omit<NextLinkProps, "href" | "as" | "onClick" | "onMouseEnter"> {
+  to: NextLinkProps["href"];
+  linkAs?: NextLinkProps["as"];
 }
 
 export const NextLinkComposed = React.forwardRef<
@@ -32,20 +32,18 @@ export const NextLinkComposed = React.forwardRef<
       shallow={shallow}
       passHref
       locale={locale}
-    >
-      <Anchor ref={ref} {...other} />
-    </NextLink>
+    />
   );
 });
 
 export type LinkProps = {
   activeClassName?: string;
-  as?: NextLinkProps['as'];
-  href: NextLinkProps['href'];
-  linkAs?: NextLinkProps['as']; // Useful when the as prop is shallow by styled().
+  as?: NextLinkProps["as"];
+  href: NextLinkProps["href"];
+  linkAs?: NextLinkProps["as"]; // Useful when the as prop is shallow by styled().
   noLinkStyle?: boolean;
-} & Omit<NextLinkComposedProps, 'to' | 'linkAs' | 'href'> &
-  Omit<MuiLinkProps, 'href'>;
+} & Omit<NextLinkComposedProps, "to" | "linkAs" | "href"> &
+  Omit<MuiLinkProps, "href">;
 
 // A styled version of the Next.js Link component:
 // https://nextjs.org/docs/api-reference/next/link
@@ -54,7 +52,7 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
   ref
 ) {
   const {
-    activeClassName = 'active',
+    activeClassName = "active",
     as,
     className: classNameProps,
     href,
@@ -70,14 +68,14 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
   } = props;
 
   const router = useRouter();
-  const pathname = typeof href === 'string' ? href : href.pathname;
+  const pathname = typeof href === "string" ? href : href.pathname;
   const className = clsx(classNameProps, {
-    [activeClassName]: router.pathname === pathname && activeClassName
+    [activeClassName]: router.pathname === pathname && activeClassName,
   });
 
   const isExternal =
-    typeof href === 'string' &&
-    (href.indexOf('http') === 0 || href.indexOf('mailto:') === 0);
+    typeof href === "string" &&
+    (href.indexOf("http") === 0 || href.indexOf("mailto:") === 0);
 
   if (isExternal) {
     if (noLinkStyle) {
@@ -95,7 +93,7 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
     scroll,
     shallow,
     prefetch,
-    locale
+    locale,
   };
 
   if (noLinkStyle) {
