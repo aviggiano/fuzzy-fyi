@@ -10,7 +10,7 @@ function template(job: Job): string {
     `| --- | --- |`,
     `| Job ID | [${job.id}](${config.backend.url}/dashboard/jobs/${job.id}) |`,
     `| Command | ${code(job.cmd)} |`,
-    `| Instance ID | ${job.instanceId} |`,
+    `| Instance ID | ${code(job.instanceId)} |`,
     `| Instance Type | ${code(job.instanceType)} |`,
     `| Status | ${label[job.status]} |`,
     `| Elapsed | ${formatTimeElapsed(job)} |`,

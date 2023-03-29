@@ -32,12 +32,13 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
     userData: Buffer.from(
       [
         `#!/usr/bin/env bash`,
-        `set -ux`,
-        `aws s3 cp s3://${config.aws.s3.bucket}/infrastructure/runner.sh /home/ubuntu/runner.sh`,
-        `chmod 755 /home/ubuntu/runner.sh`,
+        `set -u`,
         `export AWS_ACCESS_KEY_ID=${config.aws.ec2.accessKeyId}`,
         `export AWS_SECRET_ACCESS_KEY=${config.aws.ec2.secretAccessKey}`,
-        `sudo su -Eu ubuntu -s /home/ubuntu/runner.sh`,
+        `set -x`,
+        `aws s3 cp s3://${config.aws.s3.bucket}/infrastructure/runner.sh /home/ubuntu/runner.sh`,
+        `chmod 755 /home/ubuntu/runner.sh`,
+        `sudo -u ubuntu -s /home/ubuntu/runner.sh`,
       ].join("\n")
     ).toString("base64"),
   });
