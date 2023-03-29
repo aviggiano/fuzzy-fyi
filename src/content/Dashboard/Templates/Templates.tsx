@@ -28,7 +28,7 @@ const applyPagination = (
   return templates.slice(page * limit, page * limit + limit);
 };
 
-function Templates({ templates }: { templates: Template[] }) {
+function Templates({ templates }: { templates?: Template[] }) {
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
   const selectedBulkActions = selectedTemplates.length > 0;
   const [page, setPage] = useState<number>(0);
@@ -39,7 +39,7 @@ function Templates({ templates }: { templates: Template[] }) {
   ): void => {
     setSelectedTemplates(
       event.target.checked
-        ? templates.map((template: Template) => template.id)
+        ? templates?.map((template: Template) => template.id) || []
         : []
     );
   };
@@ -65,10 +65,11 @@ function Templates({ templates }: { templates: Template[] }) {
     setLimit(parseInt(event.target.value));
   };
 
-  const paginatedTemplates = applyPagination(templates, page, limit);
+  const paginatedTemplates = applyPagination(templates || [], page, limit);
   const selectedSomeTemplates =
-    selectedTemplates.length > 0 && selectedTemplates.length < templates.length;
-  const selectedAllTemplates = selectedTemplates.length === templates.length;
+    selectedTemplates.length > 0 &&
+    selectedTemplates.length < (templates?.length || 0);
+  const selectedAllTemplates = selectedTemplates.length === templates?.length;
 
   return (
     <Card>
@@ -182,7 +183,7 @@ function Templates({ templates }: { templates: Template[] }) {
         <Box p={2}>
           <TablePagination
             component="div"
-            count={templates.length}
+            count={templates?.length || 0}
             onPageChange={handlePageChange}
             onRowsPerPageChange={handleLimitChange}
             page={page}

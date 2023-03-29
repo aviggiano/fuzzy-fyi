@@ -73,7 +73,7 @@ function Interval({ job }: { job: Job }) {
   return <>{formatted}</>;
 }
 
-function Jobs({ jobs }: { jobs: Job[] }) {
+function Jobs({ jobs }: { jobs?: Job[] }) {
   const router = useRouter();
   const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
   const [active, setActive] = useState(true);
@@ -100,7 +100,9 @@ function Jobs({ jobs }: { jobs: Job[] }) {
   };
 
   const handleSelectAllJobs = (event: ChangeEvent<HTMLInputElement>): void => {
-    setSelectedJobs(event.target.checked ? jobs.map((job: Job) => job.id) : []);
+    setSelectedJobs(
+      event.target.checked ? jobs?.map((job: Job) => job.id) || [] : []
+    );
   };
 
   const handleSelectOneJob = (
@@ -132,11 +134,11 @@ function Jobs({ jobs }: { jobs: Job[] }) {
     });
   };
 
-  const filteredJobs = applyFilters(jobs, filters);
+  const filteredJobs = applyFilters(jobs || [], filters);
   const paginatedJobs = applyPagination(filteredJobs, page, limit);
   const selectedSomeJobs =
-    selectedJobs.length > 0 && selectedJobs.length < jobs.length;
-  const selectedAllJobs = selectedJobs.length === jobs.length;
+    selectedJobs.length > 0 && selectedJobs.length < (jobs?.length || 0);
+  const selectedAllJobs = selectedJobs.length === jobs?.length;
   const theme = useTheme();
 
   return (

@@ -15,7 +15,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { config } from "@config";
 
-function NewTemplate({ projects }: { projects: Project[] }) {
+function NewTemplate({ projects }: { projects?: Project[] }) {
   const router = useRouter();
 
   const [active, setIsActive] = useState(true);
@@ -78,11 +78,11 @@ function NewTemplate({ projects }: { projects: Project[] }) {
                     value={project?.name}
                     onChange={(e) =>
                       setProject(
-                        projects.find((p) => p.name === e.target.value)!
+                        projects?.find((p) => p.name === e.target.value)!
                       )
                     }
                   >
-                    {projects.map((project) => (
+                    {projects?.map((project) => (
                       <MenuItem key={project.id} value={project.name}>
                         {project.name}
                       </MenuItem>

@@ -19,8 +19,8 @@ function NewJob({
   projects,
   templates,
 }: {
-  projects: Project[];
-  templates: Template[];
+  projects?: Project[];
+  templates?: Template[];
 }) {
   const router = useRouter();
 
@@ -55,8 +55,8 @@ function NewJob({
   };
 
   const onChangeTemplate = (e: ChangeEvent<HTMLInputElement>) => {
-    const template = templates.find((t) => t.id === e.target.value)!;
-    const project = projects.find((p) => p.id === template.projectId)!;
+    const template = templates?.find((t) => t.id === e.target.value)!;
+    const project = projects?.find((p) => p.id === template.projectId)!;
     setTemplate(template);
     setCmd(template.cmd);
     setInstanceType(template.instanceType);
@@ -97,11 +97,11 @@ function NewJob({
                     value={project?.name}
                     onChange={(e) =>
                       setProject(
-                        projects.find((p) => p.name === e.target.value)!
+                        projects?.find((p) => p.name === e.target.value)!
                       )
                     }
                   >
-                    {projects.map((project) => (
+                    {projects?.map((project) => (
                       <MenuItem key={project.id} value={project.name}>
                         {project.name}
                       </MenuItem>
@@ -114,7 +114,7 @@ function NewJob({
                     value={template?.id}
                     onChange={onChangeTemplate}
                   >
-                    {templates.map((template) => (
+                    {templates?.map((template) => (
                       <MenuItem key={template.id} value={template.id}>
                         {template.id}
                       </MenuItem>
