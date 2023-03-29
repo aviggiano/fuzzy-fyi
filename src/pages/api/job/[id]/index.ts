@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import * as ec2 from "@services/ec2";
 import * as github from "@services/github";
 import prisma from "@services/prisma";
+import { getJobWithSignedUrls } from "@services/jobUtils";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -37,7 +38,9 @@ async function GET(request: NextApiRequest, response: NextApiResponse) {
       project: true,
     },
   });
-  response.status(200).json(job);
+
+  const jobWithLogs = await getJobWithSignedUrls(job);
+  response.status(200).json(jobWithLogs);
 }
 
 async function PATCH(request: NextApiRequest, response: NextApiResponse) {

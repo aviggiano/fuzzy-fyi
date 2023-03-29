@@ -33,6 +33,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useRouter } from "next/router";
 import { config } from "@config";
 import { color, formatTimeElapsed, label } from "@services/jobUtils";
+import Link from "next/link";
 
 interface Filters {
   status?: JobStatus;
@@ -213,7 +214,7 @@ function Jobs({ jobs }: { jobs: Job[] }) {
                         color="text.primary"
                         gutterBottom
                       >
-                        {job.id}
+                        <Link href={`/dashboard/jobs/${job.id}`}>{job.id}</Link>
                       </Typography>
                       <Typography variant="body2" color="text.secondary" noWrap>
                         {formatDistanceToNow(new Date(job.createdAt)) + " ago"}
