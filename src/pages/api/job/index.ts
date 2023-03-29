@@ -1,11 +1,10 @@
 import { JobStatus } from "@prisma/client";
-import { type Prisma } from "@prisma/client";
 import * as ec2 from "@services/ec2";
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@services/prisma";
-import * as s3 from "@services/s3";
 import * as github from "@services/github";
 import { config } from "@config";
+import { getJobWithSignedUrls } from "@services/jobUtils";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -85,24 +84,6 @@ async function GET(request: NextApiRequest, response: NextApiResponse) {
       createdAt: "desc",
     },
   });
-  const jobsWithLogs = await Promise.all(
-    jobs.map(async (job) => {
-      if (job.status.startsWith("FINISHED")) {
-        const coverageUrl = await s3.getSignedUrl(
-          job.coverageUrl!.replace(`${config.backend.outputUrl}/`, "")
-        );
-        const logsUrl = await s3.getSignedUrl(
-          job.logsUrl!.replace(`${config.backend.outputUrl}/`, "")
-        );
-        return {
-          ...job,
-          coverageUrl,
-          logsUrl,
-        };
-      } else {
-        return job;
-      }
-    })
-  );
+  const jobsWithLogs = await Promise.all(jobs.map(getJobWithSignedUrls));
   response.status(200).json(jobsWithLogs);
 }

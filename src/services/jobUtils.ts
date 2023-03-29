@@ -1,6 +1,28 @@
 import { LabelProps } from "@components/Label";
-import { Job, JobStatus } from "@prisma/client";
+import { Job, JobStatus, Project } from "@prisma/client";
 import { intervalToDuration } from "date-fns";
+import * as s3 from "@services/s3";
+import { config } from "@config";
+
+export async function getJobWithSignedUrls(
+  job: Job & { project: Project }
+): Promise<Job & { project: Project }> {
+  if (job.status.startsWith("FINISHED")) {
+    const coverageUrl = await s3.getSignedUrl(
+      job.coverageUrl!.replace(`${config.backend.outputUrl}/`, "")
+    );
+    const logsUrl = await s3.getSignedUrl(
+      job.logsUrl!.replace(`${config.backend.outputUrl}/`, "")
+    );
+    return {
+      ...job,
+      coverageUrl,
+      logsUrl,
+    };
+  } else {
+    return job;
+  }
+}
 
 export function formatTimeElapsed(job: Job): string {
   const end =
