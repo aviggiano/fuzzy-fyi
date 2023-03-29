@@ -16,7 +16,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function POST(request: NextApiRequest, response: NextApiResponse) {
-  console.log(request.body);
   const body: Prisma.JobCreateInput & {
     projectId?: string;
     templateId?: string;
@@ -32,7 +31,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
     : null;
 
   const instanceId = await ec2.runInstance({
-    instanceType: body.instanceType,
+    instanceType: body.instanceType || template?.instanceType!,
     userData: Buffer.from(
       [
         `#!/usr/bin/env bash`,
@@ -58,12 +57,12 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
         ? {
             template: {
               connect: {
-                id: body.templateId,
+                id: template.id,
               },
             },
           }
         : {}),
-      instanceId: instanceId,
+      instanceId,
       status: JobStatus.STARTED,
     },
     include: {
