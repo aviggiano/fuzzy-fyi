@@ -36,6 +36,7 @@ else
 fi
 
 echo "[$(date)] Run command"
+curl -XPATCH -H 'Content-Type: application/json' --data "{\"status\":\"RUNNING\"}" "$BACKEND_URL/api/job/$JOB_ID"
 JOB_CMD=$(echo $JOB | jq --raw-output '.cmd')
 echo "[$(date)] '$JOB_CMD'"
 eval $JOB_CMD | tee logs.txt
