@@ -8,8 +8,9 @@ function template(job: Job): string {
   return [
     `| | |`,
     `| --- | --- |`,
-    `| Job ID | [${job.id}](${config.backend.url}/dashboard/jobs/${job.id}) | `,
+    `| Job ID | [${job.id}](${config.backend.url}/dashboard/jobs/${job.id}) |`,
     `| Command | ${code(job.cmd)} |`,
+    `| Instance ID | ${job.instanceId} |`,
     `| Instance Type | ${code(job.instanceType)} |`,
     `| Status | ${label[job.status]} |`,
     `| Elapsed | ${formatTimeElapsed(job)} |`,
