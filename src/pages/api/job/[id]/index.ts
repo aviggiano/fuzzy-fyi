@@ -50,7 +50,11 @@ async function PATCH(request: NextApiRequest, response: NextApiResponse) {
     where: {
       id: query.id?.toString(),
     },
+    include: {
+      project: true,
+    },
   });
+  await github.createComment(job);
   response.status(200).json(job);
 }
 
