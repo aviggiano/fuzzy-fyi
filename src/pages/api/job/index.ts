@@ -16,11 +16,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function POST(request: NextApiRequest, response: NextApiResponse) {
-  const body: Prisma.JobCreateInput & {
-    projectId?: string;
-    templateId?: string;
-    instanceType: string;
-  } = request.body;
+  const { body } = request;
 
   const template = body.templateId
     ? await prisma.template.findFirst({
