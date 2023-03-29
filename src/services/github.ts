@@ -21,17 +21,16 @@ const octokit = new Octokit({
   auth: config.github.auth.token,
 });
 
-export async function createComment(
-  job: Job & { project: Project },
-  issueNumber: number | string
-) {
+export async function createComment(job: Job & { project: Project }) {
+  if (!job.pullRequestNumber) return;
+
   const [, owner, repo] = job.project.url.match(
     /.*\.com\/(.*)\/(.*).*/
   ) as RegExpMatchArray;
   return octokit.rest.issues.createComment({
     owner,
     repo,
-    issue_number: Number(issueNumber),
+    issue_number: Number(job.pullRequestNumber),
     body: template(job),
   });
 }

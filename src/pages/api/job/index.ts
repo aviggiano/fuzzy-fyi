@@ -70,9 +70,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
     },
   });
 
-  if (job.pullRequestNumber) {
-    await github.createComment(job, job.pullRequestNumber);
-  }
+  await github.createComment(job);
 
   response.status(200).json(job);
 }

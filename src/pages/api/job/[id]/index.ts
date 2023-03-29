@@ -23,9 +23,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
       project: true,
     },
   });
-  if (job.pullRequestNumber) {
-    await github.createComment(job, job.pullRequestNumber);
-  }
+  await github.createComment(job);
   response.status(200).json(job);
 }
 
@@ -85,9 +83,7 @@ async function DELETE(request: NextApiRequest, response: NextApiResponse) {
     });
   }
 
-  if (job.pullRequestNumber) {
-    await github.createComment(job, job.pullRequestNumber);
-  }
+  await github.createComment(job);
 
   response.status(200).json(job);
 }
