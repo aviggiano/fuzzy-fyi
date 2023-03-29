@@ -19,7 +19,9 @@ function NewTemplate({ projects }: { projects: Project[] }) {
   const router = useRouter();
 
   const [active, setIsActive] = useState(true);
-  const [project, setProject] = useState<Project>(projects[0]);
+  const [project, setProject] = useState<Project | undefined>(
+    projects ? projects[0] : undefined
+  );
   const [cmd, setCmd] = useState<string>();
   const instanceTypes = config.aws.ec2.instanceTypes;
   const [instanceType, setInstanceType] = useState<string>(instanceTypes[0]);

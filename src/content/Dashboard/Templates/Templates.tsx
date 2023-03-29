@@ -15,12 +15,10 @@ import {
   TableRow,
   TableContainer,
   Typography,
-  useTheme,
   CardHeader,
 } from "@mui/material";
 
 import BulkActions from "./BulkActions";
-import { useRouter } from "next/router";
 
 const applyPagination = (
   templates: Template[],

@@ -25,7 +25,9 @@ function NewJob({
   const router = useRouter();
 
   const [active, setIsActive] = useState(true);
-  const [project, setProject] = useState<Project>(projects[0]);
+  const [project, setProject] = useState<Project | undefined>(
+    projects ? projects[0] : undefined
+  );
   const [template, setTemplate] = useState<Template | undefined>();
   const [ref, setRef] = useState<string>("main");
   const [cmd, setCmd] = useState<string>();
@@ -41,7 +43,7 @@ function NewJob({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        projectId: project.id,
+        projectId: project?.id,
         templateId: template?.id,
         instanceType,
         ref,
