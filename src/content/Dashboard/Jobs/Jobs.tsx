@@ -60,7 +60,7 @@ const applyPagination = (jobs: Job[], page: number, limit: number): Job[] => {
 };
 
 function Interval({ job }: { job: Job }) {
-  const [formatted, setFormatted] = useState("");
+  const [formatted, setFormatted] = useState(formatTimeElapsed(job));
 
   useEffect(() => {
     const interval = setInterval(() => {

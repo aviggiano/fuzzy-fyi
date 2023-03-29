@@ -9,7 +9,8 @@ import Jobs from "@content/Dashboard/Jobs/Jobs";
 import { ReactElement } from "react";
 import { GetServerSideProps } from "next";
 import { Job } from "@prisma/client";
-import { config } from "@config";
+import prisma from "@services/prisma";
+import { getJobWithSignedUrls } from "@services/jobUtils";
 
 function ApplicationsJobs({ jobs }: { jobs: Job[] }) {
   return (
@@ -43,12 +44,19 @@ ApplicationsJobs.getLayout = (page: ReactElement) => (
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const res = await fetch(`${config.backend.url}/api/job`);
-  const jobs = await res.json();
+  const jobs = await prisma.job.findMany({
+    include: {
+      project: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  const jobsWithLogs = await Promise.all(jobs.map(getJobWithSignedUrls));
 
   return {
     props: {
-      jobs,
+      jobs: JSON.parse(JSON.stringify(jobsWithLogs)),
     },
   };
 };

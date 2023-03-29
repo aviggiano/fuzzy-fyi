@@ -7,8 +7,9 @@ import Footer from "@components/Footer";
 
 import Job from "@content/Dashboard/Jobs/Job";
 import { ReactElement } from "react";
-import { config } from "@config";
 import { GetServerSideProps } from "next";
+import prisma from "@services/prisma";
+import { getJobWithSignedUrls } from "@services/jobUtils";
 
 function ApplicationsTransactions({
   job,
@@ -46,23 +47,33 @@ ApplicationsTransactions.getLayout = (page: ReactElement) => (
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const job = await fetch(
-    `${config.backend.url}/api/job/${context.params!.id}`
-  ).then((res) => res.json());
-  const coverage = job.coverageUrl
-    ? await fetch(job.coverageUrl).then((res) => res.text())
+  const job = await prisma.job.findUniqueOrThrow({
+    where: {
+      id: context.params?.id?.toString(),
+    },
+    include: {
+      project: true,
+    },
+  });
+
+  const jobWithLogs = await getJobWithSignedUrls(job);
+
+  const coverage = jobWithLogs.coverageUrl
+    ? await fetch(jobWithLogs.coverageUrl).then((res) => res.text())
     : undefined;
-  const logs = job.logsUrl
-    ? await fetch(job.logsUrl).then((res) => res.text())
+  const logs = jobWithLogs.logsUrl
+    ? await fetch(jobWithLogs.logsUrl).then((res) => res.text())
     : undefined;
 
   return {
     props: {
-      job: {
-        ...job,
-        logs,
-        coverage,
-      },
+      job: JSON.parse(
+        JSON.stringify({
+          ...jobWithLogs,
+          logs,
+          coverage,
+        })
+      ),
     },
   };
 };

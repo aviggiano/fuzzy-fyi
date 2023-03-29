@@ -7,9 +7,9 @@ import Footer from "@components/Footer";
 
 import NewTemplate from "@content/Dashboard/Templates/NewTemplate";
 import { ReactElement } from "react";
-import { config } from "@config";
 import { GetServerSideProps } from "next";
 import { Project } from "@prisma/client";
+import prisma from "@services/prisma";
 
 function ApplicationsTransactions({ projects }: { projects: Project[] }) {
   return (
@@ -43,12 +43,10 @@ ApplicationsTransactions.getLayout = (page: ReactElement) => (
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const projects = await fetch(`${config.backend.url}/api/project`).then(
-    (res) => res.json()
-  );
+  const projects = await prisma.project.findMany();
   return {
     props: {
-      projects,
+      projects: JSON.parse(JSON.stringify(projects)),
     },
   };
 };

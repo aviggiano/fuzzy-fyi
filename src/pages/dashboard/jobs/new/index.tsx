@@ -10,6 +10,7 @@ import { ReactElement } from "react";
 import { config } from "@config";
 import { GetServerSideProps } from "next";
 import { Project, Template } from "@prisma/client";
+import prisma from "@services/prisma";
 
 function ApplicationsTransactions({
   projects,
@@ -50,14 +51,21 @@ ApplicationsTransactions.getLayout = (page: ReactElement) => (
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const [projects, templates] = await Promise.all([
-    fetch(`${config.backend.url}/api/project`).then((res) => res.json()),
-    fetch(`${config.backend.url}/api/template`).then((res) => res.json()),
+    prisma.project.findMany(),
+    prisma.template.findMany({
+      include: {
+        project: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    }),
   ]);
 
   return {
     props: {
-      projects,
-      templates,
+      projects: JSON.parse(JSON.stringify(projects)),
+      templates: JSON.parse(JSON.stringify(templates)),
     },
   };
 };

@@ -9,7 +9,7 @@ import Templates from "@content/Dashboard/Templates/Templates";
 import { ReactElement } from "react";
 import { GetServerSideProps } from "next";
 import { Template } from "@prisma/client";
-import { config } from "@config";
+import prisma from "@services/prisma";
 
 function ApplicationsTemplates({ templates }: { templates: Template[] }) {
   return (
@@ -43,12 +43,18 @@ ApplicationsTemplates.getLayout = (page: ReactElement) => (
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const res = await fetch(`${config.backend.url}/api/template`);
-  const templates = await res.json();
+  const templates = await prisma.template.findMany({
+    include: {
+      project: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   return {
     props: {
-      templates,
+      templates: JSON.parse(JSON.stringify(templates)),
     },
   };
 };
