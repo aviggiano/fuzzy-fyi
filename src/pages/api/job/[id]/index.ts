@@ -71,10 +71,6 @@ async function DELETE(request: NextApiRequest, response: NextApiResponse) {
     instanceId: job.instanceId,
   });
 
-  if (job.pullRequestNumber) {
-    await github.createComment(job, job.pullRequestNumber);
-  }
-
   if (!job.status.startsWith("FINISHED")) {
     job = await prisma.job.update({
       data: {
@@ -88,5 +84,10 @@ async function DELETE(request: NextApiRequest, response: NextApiResponse) {
       },
     });
   }
+
+  if (job.pullRequestNumber) {
+    await github.createComment(job, job.pullRequestNumber);
+  }
+
   response.status(200).json(job);
 }
