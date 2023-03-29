@@ -38,7 +38,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
         `set -x`,
         `aws s3 cp s3://${config.aws.s3.bucket}/infrastructure/runner.sh /home/ubuntu/runner.sh`,
         `chmod 755 /home/ubuntu/runner.sh`,
-        `sudo -u ubuntu -s /home/ubuntu/runner.sh`,
+        `sudo -Eu ubuntu bash /home/ubuntu/runner.sh`,
       ].join("\n")
     ).toString("base64"),
   });
