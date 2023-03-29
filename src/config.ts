@@ -4,9 +4,12 @@ export const config = {
     ec2: {
       amiId: process.env.AAWS_EC2_AMI_ID || process.env.AWS_EC2_AMI_ID!,
       keyName: process.env.AAWS_EC2_KEY_NAME || process.env.AWS_EC2_KEY_NAME!,
-      instanceProfileArn:
-        process.env.AAWS_EC2_INSTANCE_PROFILE_ARN ||
-        process.env.AWS_EC2_INSTANCE_PROFILE_ARN!,
+      accessKeyId:
+        process.env.AAWS_EC2_ACCESS_KEY_ID ||
+        process.env.AWS_EC2_ACCESS_KEY_ID!,
+      secretAccessKey:
+        process.env.AAWS_EC2_SECRET_ACCESS_KEY ||
+        process.env.AWS_EC2_SECRET_ACCESS_KEY!,
       instanceTypes: ["c5.large", "c5.xlarge", "c5.2xlarge"],
     },
     s3: {
