@@ -15,42 +15,6 @@ import Box from "@mui/material/Box";
 import { formatTimeElapsed, label } from "@services/jobUtils";
 
 const style = `
-html {
-  background-color: #181a1b !important;
-}
-html {
-  color-scheme: dark !important;
-}
-html, body, input, textarea, select, button, dialog {
-  background-color: #181a1b;
-}
-html, body, input, textarea, select, button {
-  border-color: #736b5e;
-  color: #e8e6e3;
-}
-a {
-  color: #3391ff;
-}
-table {
-  border-color: #545b5e;
-}
-::placeholder {
-  color: #b2aba1;
-}
-input:-webkit-autofill,
-textarea:-webkit-autofill,
-select:-webkit-autofill {
-  background-color: #404400 !important;
-  color: #e8e6e3 !important;
-}
-::selection {
-  background-color: #004daa !important;
-  color: #e8e6e3 !important;
-}
-::-moz-selection {
-  background-color: #004daa !important;
-  color: #e8e6e3 !important;
-} 
 code {
   background-color: rgb(34, 36, 38) !important;
 }
