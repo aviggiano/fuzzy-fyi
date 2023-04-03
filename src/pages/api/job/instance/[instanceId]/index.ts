@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { config } from "@config";
 import prisma from "@services/prisma";
+import { getOrThrow } from "@services/apiKey";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -9,11 +10,21 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   return handlers[req.method as string](req, res);
 }
 
+/**
+ * API
+ */
 async function GET(request: NextApiRequest, response: NextApiResponse) {
   const { query } = request;
+  const apiKey = await getOrThrow(request);
+
   const [job] = await prisma.job.findMany({
     where: {
       instanceId: query.instanceId?.toString(),
+      project: {
+        organization: {
+          apiKey,
+        },
+      },
     },
     include: {
       project: true,

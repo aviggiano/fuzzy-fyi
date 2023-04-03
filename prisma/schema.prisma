@@ -10,6 +10,7 @@ datasource db {
 model Organization {
   id        String    @id @default(uuid())
   name      String
+  apiKey    String?
   users     User[]
   projects  Project[]
   createdAt DateTime  @default(now())

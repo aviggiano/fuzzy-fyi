@@ -14,6 +14,7 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { config } from "@config";
+import { supabase } from "@services/supabase";
 
 function NewTemplate({ projects }: { projects?: Project[] }) {
   const router = useRouter();
@@ -28,20 +29,26 @@ function NewTemplate({ projects }: { projects?: Project[] }) {
 
   const onClick = () => {
     setIsActive(false);
-    fetch(`${config.backend.url}/api/template`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        projectId: project?.id,
-        instanceType,
-        cmd,
-      }),
-    }).then(() => {
+    (async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      await fetch(`${config.backend.url}/api/template`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + session?.access_token,
+        },
+        body: JSON.stringify({
+          projectId: project?.id,
+          instanceType,
+          cmd,
+        }),
+      });
       router.push("/dashboard/templates");
-    });
+      setIsActive(true);
+    })();
   };
 
   return (

@@ -55,14 +55,7 @@ function Sidebar() {
       >
         <Scrollbar>
           <Box mt={3}>
-            <Box
-              mx={2}
-              sx={{
-                width: 52,
-              }}
-            >
-              <LogoSign />
-            </Box>
+            <LogoSign />
           </Box>
           <Divider
             sx={{
@@ -112,14 +105,7 @@ function Sidebar() {
         >
           <Scrollbar>
             <Box mt={3}>
-              <Box
-                mx={2}
-                sx={{
-                  width: 52,
-                }}
-              >
-                <LogoSign />
-              </Box>
+              <LogoSign />
             </Box>
             <Divider
               sx={{

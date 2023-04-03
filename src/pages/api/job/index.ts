@@ -5,6 +5,7 @@ import prisma from "@services/prisma";
 import * as github from "@services/github";
 import { config } from "@config";
 import { getJobWithSignedUrls } from "@services/jobUtils";
+import { getOrThrow } from "@services/apiKey";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -14,9 +15,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   return handlers[req.method as string](req, res);
 }
 
+/**
+ * API
+ */
 async function POST(request: NextApiRequest, response: NextApiResponse) {
   const { body } = request;
-  console.log(body);
+  const apiKey = await getOrThrow(request);
 
   const template = body.templateId
     ? await prisma.template.findFirst({
@@ -32,6 +36,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
       [
         `#!/usr/bin/env bash`,
         `set -u`,
+        `export X_API_KEY=${apiKey}`,
         `export AWS_ACCESS_KEY_ID=${config.aws.ec2.accessKeyId}`,
         `export AWS_SECRET_ACCESS_KEY=${config.aws.ec2.secretAccessKey}`,
         `set -x`,
@@ -75,10 +80,21 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
   response.status(200).json(job);
 }
 
+/**
+ * API
+ */
 async function GET(request: NextApiRequest, response: NextApiResponse) {
+  const apiKey = await getOrThrow(request);
   const jobs = await prisma.job.findMany({
     include: {
       project: true,
+    },
+    where: {
+      project: {
+        organization: {
+          apiKey,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",

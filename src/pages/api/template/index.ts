@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@services/prisma";
+import { getOrThrow } from "@services/apiKey";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -9,6 +10,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   return handlers[req.method as string](req, res);
 }
 
+/**
+ * Web
+ */
 async function POST(request: NextApiRequest, response: NextApiResponse) {
   const { body } = request;
 
@@ -21,10 +25,21 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
   response.status(200).json(template);
 }
 
+/**
+ * API
+ */
 async function GET(request: NextApiRequest, response: NextApiResponse) {
+  const apiKey = await getOrThrow(request);
   const templates = await prisma.template.findMany({
     include: {
       project: true,
+    },
+    where: {
+      project: {
+        organization: {
+          apiKey,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",

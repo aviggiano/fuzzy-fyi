@@ -16,7 +16,7 @@ echo "[$(date)] Go to working directory"
 cd $WORKDIR
 
 echo "[$(date)] Fetch job"
-JOB=$(curl "$BACKEND_URL/api/job/instance/$INSTANCE_ID")
+JOB=$(curl -H "x-api-key: $X_API_KEY" "$BACKEND_URL/api/job/instance/$INSTANCE_ID")
 JOB_ID=$(echo $JOB | jq --raw-output '.id')
 TEMPLATE_ID=$(echo $JOB | jq --raw-output '.templateId // "undefined"')
 S3_BUCKET=$(echo $JOB | jq --raw-output '.aws.s3.bucket')
@@ -36,7 +36,7 @@ else
 fi
 
 echo "[$(date)] Run command"
-curl -XPATCH -H 'Content-Type: application/json' --data "{\"status\":\"RUNNING\"}" "$BACKEND_URL/api/job/$JOB_ID"
+curl -XPATCH -H 'Content-Type: application/json' -H "x-api-key: $X_API_KEY" --data "{\"status\":\"RUNNING\"}" "$BACKEND_URL/api/job/$JOB_ID"
 JOB_CMD=$(echo $JOB | jq --raw-output '.cmd')
 echo "[$(date)] '$JOB_CMD'"
 eval $JOB_CMD | tee logs.txt
@@ -53,9 +53,9 @@ aws s3 cp --content-type "text/plain;charset=UTF-8" /var/log/cloud-init-output.l
 LOGS_URL="$OUTPUT_URL/job/$JOB_ID/logs.txt"
 aws s3 sync $ECHIDNA_DIRECTORY/ s3://$S3_BUCKET/template/$TEMPLATE_ID/$ECHIDNA_DIRECTORY/
 COVERAGE_URL="$OUTPUT_URL/template/$TEMPLATE_ID/$(find $ECHIDNA_DIRECTORY -name '*.html' | tail -n1)"
-curl -XPATCH -H 'Content-Type: application/json' --data "{\"status\":\"$STATUS\",\"logsUrl\":\"$LOGS_URL\",\"coverageUrl\":\"$COVERAGE_URL\"}" "$BACKEND_URL/api/job/$JOB_ID"
+curl -XPATCH -H 'Content-Type: application/json' -H "x-api-key: $X_API_KEY" --data "{\"status\":\"$STATUS\",\"logsUrl\":\"$LOGS_URL\",\"coverageUrl\":\"$COVERAGE_URL\"}" "$BACKEND_URL/api/job/$JOB_ID"
 
 echo "[$(date)] Finish job"
-curl -XDELETE "$BACKEND_URL/api/job/$JOB_ID"
+curl -XDELETE -H "x-api-key: $X_API_KEY" "$BACKEND_URL/api/job/$JOB_ID"
 
 sudo shutdown -h now
