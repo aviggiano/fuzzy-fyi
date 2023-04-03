@@ -10,6 +10,7 @@ import { ReactElement } from "react";
 import { GetServerSideProps } from "next";
 import { Project, Template } from "@prisma/client";
 import prisma from "@services/prisma";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 function ApplicationsTransactions({
   projects,
@@ -49,11 +50,37 @@ ApplicationsTransactions.getLayout = (page: ReactElement) => (
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const supabase = createServerSupabaseClient(context);
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   const [projects, templates] = await Promise.all([
-    prisma.project.findMany(),
+    prisma.project.findMany({
+      where: {
+        organization: {
+          users: {
+            some: {
+              authId: session?.user.id!,
+            },
+          },
+        },
+      },
+    }),
     prisma.template.findMany({
       include: {
         project: true,
+      },
+      where: {
+        project: {
+          organization: {
+            users: {
+              some: {
+                authId: session?.user.id!,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",

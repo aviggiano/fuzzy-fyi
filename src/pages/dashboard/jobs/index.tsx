@@ -11,6 +11,7 @@ import { GetServerSideProps } from "next";
 import { Job } from "@prisma/client";
 import prisma from "@services/prisma";
 import { getJobWithSignedUrls } from "@services/jobUtils";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 function ApplicationsJobs({ jobs }: { jobs: Job[] }) {
   return (
@@ -44,9 +45,25 @@ ApplicationsJobs.getLayout = (page: ReactElement) => (
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const supabase = createServerSupabaseClient(context);
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   const jobs = await prisma.job.findMany({
     include: {
       project: true,
+    },
+    where: {
+      project: {
+        organization: {
+          users: {
+            some: {
+              authId: session?.user.id!,
+            },
+          },
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",

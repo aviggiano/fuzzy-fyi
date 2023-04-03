@@ -10,6 +10,8 @@ import { ReactElement } from "react";
 import { GetServerSideProps } from "next";
 import { Template } from "@prisma/client";
 import prisma from "@services/prisma";
+import { supabase } from "@services/supabase";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 function ApplicationsTemplates({ templates }: { templates: Template[] }) {
   return (
@@ -43,9 +45,25 @@ ApplicationsTemplates.getLayout = (page: ReactElement) => (
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const supabase = createServerSupabaseClient(context);
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   const templates = await prisma.template.findMany({
     include: {
       project: true,
+    },
+    where: {
+      project: {
+        organization: {
+          users: {
+            some: {
+              authId: session?.user.id!,
+            },
+          },
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",
