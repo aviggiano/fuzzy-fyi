@@ -5,7 +5,7 @@ import prisma from "@services/prisma";
 import * as github from "@services/github";
 import { config } from "@config";
 import { getJobWithSignedUrls } from "@services/jobUtils";
-import { getOrThrow } from "@services/apiKey";
+import { getApiKeyOrThrow } from "@services/auth";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -16,11 +16,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 /**
- * API
+ * API & Web
  */
 async function POST(request: NextApiRequest, response: NextApiResponse) {
   const { body } = request;
-  const apiKey = await getOrThrow(request);
+  const apiKey = await getApiKeyOrThrow(request);
 
   const template = body.templateId
     ? await prisma.template.findFirst({
@@ -84,7 +84,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
  * API
  */
 async function GET(request: NextApiRequest, response: NextApiResponse) {
-  const apiKey = await getOrThrow(request);
+  const apiKey = await getApiKeyOrThrow(request);
   const jobs = await prisma.job.findMany({
     include: {
       project: true,

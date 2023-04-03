@@ -15,6 +15,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { config } from "@config";
 import { supabase } from "@services/supabase";
+import { useSession, useUser } from "@supabase/auth-helpers-react";
 
 function NewTemplate({ projects }: { projects?: Project[] }) {
   const router = useRouter();
@@ -26,18 +27,18 @@ function NewTemplate({ projects }: { projects?: Project[] }) {
   const [cmd, setCmd] = useState<string>();
   const instanceTypes = config.aws.ec2.instanceTypes;
   const [instanceType, setInstanceType] = useState<string>(instanceTypes[0]);
+  const session = useSession();
+  const user = useUser();
 
   const onClick = () => {
     setIsActive(false);
     (async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
       await fetch(`${config.backend.url}/api/template`, {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          AuthId: user?.id!,
           Authorization: "Bearer " + session?.access_token,
         },
         body: JSON.stringify({

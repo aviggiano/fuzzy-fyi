@@ -10,7 +10,7 @@ datasource db {
 model Organization {
   id        String    @id @default(uuid())
   name      String
-  apiKey    String?
+  apiKey    String
   users     User[]
   projects  Project[]
   createdAt DateTime  @default(now())
@@ -19,8 +19,7 @@ model Organization {
 
 model User {
   id             String       @id @default(uuid())
-  email          String       @unique
-  name           String?
+  authId         String       @unique
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
   createdAt      DateTime     @default(now())

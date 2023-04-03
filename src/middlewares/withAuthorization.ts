@@ -17,7 +17,6 @@ export const withAuthorization: MiddlewareFactory = (next) => {
         const {
           data: { session },
         } = await supabase.auth.getSession();
-
         if (session?.user.email) {
           next(request, _next);
         } else {

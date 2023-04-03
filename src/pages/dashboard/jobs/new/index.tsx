@@ -7,7 +7,6 @@ import Footer from "@components/Footer";
 
 import NewJob from "@content/Dashboard/Jobs/NewJob";
 import { ReactElement } from "react";
-import { config } from "@config";
 import { GetServerSideProps } from "next";
 import { Project, Template } from "@prisma/client";
 import prisma from "@services/prisma";

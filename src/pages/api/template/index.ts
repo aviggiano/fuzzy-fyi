@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@services/prisma";
-import { getOrThrow } from "@services/apiKey";
+import { getApiKeyOrThrow } from "@services/auth";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -29,7 +29,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
  * API
  */
 async function GET(request: NextApiRequest, response: NextApiResponse) {
-  const apiKey = await getOrThrow(request);
+  const apiKey = await getApiKeyOrThrow(request);
   const templates = await prisma.template.findMany({
     include: {
       project: true,
