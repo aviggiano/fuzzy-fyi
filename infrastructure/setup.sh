@@ -44,10 +44,10 @@ echo "[$(date)] Install slither"
 sudo pip3 install slither-analyzer
 
 echo "[$(date)] Install echidna"
-wget https://github.com/crytic/echidna/releases/download/v2.0.5/echidna-test-2.0.5-Ubuntu-22.04.tar.gz
-tar -xvkf echidna-test-2.0.5-Ubuntu-22.04.tar.gz
-sudo mv echidna-test /usr/bin/
-rm echidna-test-2.0.5-Ubuntu-22.04.tar.gz
+wget https://github.com/crytic/echidna/releases/download/v2.1.1/echidna-2.1.1-Ubuntu-22.04.tar.gz
+tar -xvkf echidna-2.1.1-Ubuntu-22.04.tar.gz
+sudo mv echidna /usr/bin/
+rm echidna-2.1.1-Ubuntu-22.04.tar.gz
 
 echo "[$(date)] Install foundry"
 curl -L https://foundry.paradigm.xyz | bash
