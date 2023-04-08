@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { config } from "@config";
 import prisma from "@services/prisma";
 import { getApiKeyOrThrow } from "@services/auth";
 
@@ -11,28 +10,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function GET(request: NextApiRequest, response: NextApiResponse) {
-  const { query } = request;
   const apiKey = await getApiKeyOrThrow(request);
-
-  const [job] = await prisma.job.findMany({
+  const templates = await prisma.project.findMany({
     where: {
-      instanceId: query.instanceId?.toString(),
-      project: {
-        organization: {
-          apiKey,
-        },
+      organization: {
+        apiKey,
       },
     },
-    include: {
-      project: true,
+    orderBy: {
+      createdAt: "desc",
     },
   });
-  response.status(200).json({
-    ...job,
-    aws: {
-      s3: {
-        bucket: config.aws.s3.bucket,
-      },
-    },
-  });
+  response.status(200).json(templates);
 }

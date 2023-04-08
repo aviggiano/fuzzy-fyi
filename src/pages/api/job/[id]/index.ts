@@ -14,9 +14,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   return handlers[req.method as string](req, res);
 }
 
-/**
- * API
- */
 async function GET(request: NextApiRequest, response: NextApiResponse) {
   const { query } = request;
   await getApiKeyOrThrow(request);
@@ -33,9 +30,7 @@ async function GET(request: NextApiRequest, response: NextApiResponse) {
   const jobWithLogs = await getJobWithSignedUrls(job);
   response.status(200).json(jobWithLogs);
 }
-/**
- * API
- */
+
 async function PATCH(request: NextApiRequest, response: NextApiResponse) {
   const { query, body } = request;
   await getApiKeyOrThrow(request);
@@ -55,9 +50,6 @@ async function PATCH(request: NextApiRequest, response: NextApiResponse) {
   response.status(200).json(job);
 }
 
-/**
- * API
- */
 async function DELETE(request: NextApiRequest, response: NextApiResponse) {
   const { query } = request;
   await getApiKeyOrThrow(request);

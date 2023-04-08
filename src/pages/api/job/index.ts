@@ -15,9 +15,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   return handlers[req.method as string](req, res);
 }
 
-/**
- * API & Web
- */
 async function POST(request: NextApiRequest, response: NextApiResponse) {
   const { body } = request;
   const apiKey = await getApiKeyOrThrow(request);
@@ -80,9 +77,6 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
   response.status(200).json(job);
 }
 
-/**
- * API
- */
 async function GET(request: NextApiRequest, response: NextApiResponse) {
   const apiKey = await getApiKeyOrThrow(request);
   const jobs = await prisma.job.findMany({
