@@ -54,7 +54,7 @@ export function TemplatesProvider({ children }: Props) {
   }) => {
     const { project, instanceType, cmd } = params;
 
-    setIsCreatingTemplate(false);
+    setIsCreatingTemplate(true);
     (async () => {
       await fetch(`${config.backend.url}/api/template`, {
         method: "POST",
@@ -70,7 +70,7 @@ export function TemplatesProvider({ children }: Props) {
         }),
       });
       router.push("/dashboard/templates");
-      setIsCreatingTemplate(true);
+      setIsCreatingTemplate(false);
     })();
   };
 

@@ -7,10 +7,6 @@ import Footer from "@components/Footer";
 
 import NewTemplate from "@content/Dashboard/Templates/NewTemplate";
 import { ReactElement } from "react";
-import { GetServerSideProps } from "next";
-import { Project } from "@prisma/client";
-import prisma from "@services/prisma";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 function ApplicationsTransactions() {
   return (

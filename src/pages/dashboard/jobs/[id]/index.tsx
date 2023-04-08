@@ -6,23 +6,24 @@ import { Grid, Container } from "@mui/material";
 import Footer from "@components/Footer";
 
 import Job from "@content/Dashboard/Jobs/Job";
-import { ReactElement } from "react";
+import { ReactElement, useContext, useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
-import prisma from "@services/prisma";
-import { getJobWithSignedUrls } from "@services/jobUtils";
+import { JobsContext } from "@contexts/JobsContext";
 
-function ApplicationsTransactions({
-  job,
-}: {
-  job: Job & { coverage?: string; logs?: string };
-}) {
+function ApplicationsTransactions({ jobId }: { jobId: string }) {
+  const [job, setJob] = useState<Job & { coverage?: string; logs?: string }>();
+  const { getJob } = useContext(JobsContext);
+  useEffect(() => {
+    getJob(jobId).then(setJob);
+  }, [getJob, jobId]);
+
   return (
     <>
       <Head>
         <title>Jobs</title>
       </Head>
       <PageTitleWrapper>
-        <PageHeader subtitle={`Job ${job.id}`} />
+        <PageHeader subtitle={`Job ${jobId}`} />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -47,33 +48,9 @@ ApplicationsTransactions.getLayout = (page: ReactElement) => (
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const job = await prisma.job.findUniqueOrThrow({
-    where: {
-      id: context.params?.id?.toString(),
-    },
-    include: {
-      project: true,
-    },
-  });
-
-  const jobWithLogs = await getJobWithSignedUrls(job);
-
-  const coverage = jobWithLogs.coverageUrl
-    ? await fetch(jobWithLogs.coverageUrl).then((res) => res.text())
-    : undefined;
-  const logs = jobWithLogs.logsUrl
-    ? await fetch(jobWithLogs.logsUrl).then((res) => res.text())
-    : undefined;
-
   return {
     props: {
-      job: JSON.parse(
-        JSON.stringify({
-          ...jobWithLogs,
-          logs,
-          coverage,
-        })
-      ),
+      jobId: context.params?.id?.toString(),
     },
   };
 };

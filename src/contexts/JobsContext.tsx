@@ -5,6 +5,10 @@ import { useSession } from "@supabase/auth-helpers-react";
 import router from "next/router";
 
 interface JobsContext {
+  getJob: (
+    jobId: string
+  ) => Promise<Job & { coverage?: string; logs?: string }>;
+  isLoadingJob: boolean;
   isLoadingJobs: boolean;
   jobs: Job[];
   isDeletingJob: boolean;
@@ -26,6 +30,7 @@ type Props = {
 };
 
 export function JobsProvider({ children }: Props) {
+  const [isLoadingJob, setIsLoadingJob] = useState(false);
   const [isLoadingJobs, setIsLoadingJobs] = useState(false);
   const [isDeletingJob, setIsDeletingJob] = useState(false);
   const [isCreatingJob, setIsCreatingJob] = useState(false);
@@ -68,7 +73,7 @@ export function JobsProvider({ children }: Props) {
     template?: Template;
   }) => {
     const { project, instanceType, ref, cmd, template } = params;
-    setIsCreatingJob(false);
+    setIsCreatingJob(true);
     (async () => {
       await fetch(`${config.backend.url}/api/job`, {
         method: "POST",
@@ -86,13 +91,42 @@ export function JobsProvider({ children }: Props) {
         }),
       });
       router.push("/dashboard/jobs");
-      setIsCreatingJob(true);
+      setIsCreatingJob(false);
     })();
+  };
+
+  const getJob = async (
+    jobId: string
+  ): Promise<Job & { coverage?: string; logs?: string }> => {
+    setIsLoadingJob(true);
+    const j = await fetch(`${config.backend.url}/api/job/${jobId}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + session?.access_token,
+      },
+    }).then((res) => res.json());
+
+    const [coverage, logs] = await Promise.all([
+      j.coverageUrl
+        ? fetch(j.coverageUrl).then((res) => res.text())
+        : undefined,
+      j.logsUrl ? fetch(j.logsUrl).then((res) => res.text()) : undefined,
+    ]);
+
+    setIsLoadingJob(false);
+    return {
+      ...j,
+      coverage,
+      logs,
+    };
   };
 
   return (
     <JobsContext.Provider
       value={{
+        getJob,
+        isLoadingJob,
         jobs,
         isLoadingJobs,
         deleteJob,

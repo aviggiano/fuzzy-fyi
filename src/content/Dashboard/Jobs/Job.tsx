@@ -8,6 +8,7 @@ import {
   Button,
   Container,
   TextField,
+  Skeleton,
 } from "@mui/material";
 import { Job } from "@prisma/client";
 
@@ -32,116 +33,120 @@ code {
 }
 `;
 
-function Job({ job }: { job: Job & { coverage?: string; logs?: string } }) {
+function Job({ job }: { job?: Job & { coverage?: string; logs?: string } }) {
   return (
     <>
       <Container maxWidth="lg">
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="stretch"
-          spacing={3}
-        >
-          <Grid item xs={12}>
-            <Card>
-              <CardContent>
-                <Box
-                  component="form"
-                  sx={{
-                    "& .MuiTextField-root": { m: 1, width: "25ch" },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                >
-                  <TextField
-                    label="Status"
-                    defaultValue={label[job.status]}
-                    disabled
-                  />
-                  <TextField
-                    label="Instance ID"
-                    defaultValue={job.instanceId}
-                    disabled
-                  />
-                  <TextField
-                    label="Instance Type"
-                    defaultValue={job.instanceType}
-                    disabled
-                  />
-                  <TextField
-                    label="Elapsed"
-                    defaultValue={formatTimeElapsed(job)}
-                    disabled
-                  />
-                  <TextField
-                    fullWidth
-                    style={{ width: "420px" }}
-                    required
-                    label="Command"
-                    value={job.cmd}
-                    multiline
-                    disabled
-                  />
-                </Box>
-              </CardContent>
-            </Card>
+        {!job ? (
+          <Skeleton />
+        ) : (
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="stretch"
+            spacing={3}
+          >
+            <Grid item xs={12}>
+              <Card>
+                <CardContent>
+                  <Box
+                    component="form"
+                    sx={{
+                      "& .MuiTextField-root": { m: 1, width: "25ch" },
+                    }}
+                    noValidate
+                    autoComplete="off"
+                  >
+                    <TextField
+                      label="Status"
+                      defaultValue={label[job.status]}
+                      disabled
+                    />
+                    <TextField
+                      label="Instance ID"
+                      defaultValue={job.instanceId}
+                      disabled
+                    />
+                    <TextField
+                      label="Instance Type"
+                      defaultValue={job.instanceType}
+                      disabled
+                    />
+                    <TextField
+                      label="Elapsed"
+                      defaultValue={formatTimeElapsed(job)}
+                      disabled
+                    />
+                    <TextField
+                      fullWidth
+                      style={{ width: "420px" }}
+                      required
+                      label="Command"
+                      value={job.cmd}
+                      multiline
+                      disabled
+                    />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {job.logs ? (
+              <Grid item xs={12}>
+                <Card>
+                  <CardHeader title="Logs" />
+                  <Divider />
+                  <CardContent>
+                    <Box
+                      component="form"
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <div>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: `<pre>${job.logs}</pre>`,
+                          }}
+                        />
+                      </div>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ) : null}
+
+            {job.coverage ? (
+              <Grid item xs={12}>
+                <Card>
+                  <CardHeader title="Coverage" />
+                  <Divider />
+                  <CardContent>
+                    <Box
+                      component="form"
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <div>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: `<style>${style}</style>${job.coverage}`,
+                          }}
+                        />
+                      </div>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ) : null}
           </Grid>
-
-          {job.logs ? (
-            <Grid item xs={12}>
-              <Card>
-                <CardHeader title="Logs" />
-                <Divider />
-                <CardContent>
-                  <Box
-                    component="form"
-                    sx={{
-                      "& .MuiTextField-root": { m: 1, width: "25ch" },
-                    }}
-                    noValidate
-                    autoComplete="off"
-                  >
-                    <div>
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: `<pre>${job.logs}</pre>`,
-                        }}
-                      />
-                    </div>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ) : null}
-
-          {job.coverage ? (
-            <Grid item xs={12}>
-              <Card>
-                <CardHeader title="Coverage" />
-                <Divider />
-                <CardContent>
-                  <Box
-                    component="form"
-                    sx={{
-                      "& .MuiTextField-root": { m: 1, width: "25ch" },
-                    }}
-                    noValidate
-                    autoComplete="off"
-                  >
-                    <div>
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: `<style>${style}</style>${job.coverage}`,
-                        }}
-                      />
-                    </div>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ) : null}
-        </Grid>
+        )}
       </Container>
     </>
   );

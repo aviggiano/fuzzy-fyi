@@ -12,17 +12,15 @@ import { Project } from "@prisma/client";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useContext, useState } from "react";
-import { useRouter } from "next/router";
 import { config } from "@config";
-import { useSession, useUser } from "@supabase/auth-helpers-react";
 import { TemplatesContext } from "@contexts/TemplatesContext";
+import { ProjectsContext } from "@contexts/ProjectsContext";
 
-function NewTemplate({ projects }: { projects?: Project[] }) {
+function NewTemplate() {
+  const { projects, isLoadingProjects } = useContext(ProjectsContext);
   const { createTemplate, isCreatingTemplate } = useContext(TemplatesContext);
 
-  const [project, setProject] = useState<Project | undefined>(
-    projects ? projects[0] : undefined
-  );
+  const [project, setProject] = useState<Project | undefined>(projects[0]);
   const [cmd, setCmd] = useState<string>();
   const instanceTypes = config.aws.ec2.instanceTypes;
   const [instanceType, setInstanceType] = useState<string>(instanceTypes[0]);
@@ -106,7 +104,7 @@ function NewTemplate({ projects }: { projects?: Project[] }) {
                     marginRight: "9px",
                   }}
                   onClick={onClick}
-                  disabled={isCreatingTemplate}
+                  disabled={isCreatingTemplate || isLoadingProjects}
                 >
                   Create template
                 </Button>
