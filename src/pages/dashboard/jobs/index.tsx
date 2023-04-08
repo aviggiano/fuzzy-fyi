@@ -7,13 +7,8 @@ import Footer from "@components/Footer";
 
 import Jobs from "@content/Dashboard/Jobs/Jobs";
 import { ReactElement } from "react";
-import { GetServerSideProps } from "next";
-import { Job } from "@prisma/client";
-import prisma from "@services/prisma";
-import { getJobWithSignedUrls } from "@services/jobUtils";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
-function ApplicationsJobs({ jobs }: { jobs: Job[] }) {
+function ApplicationsJobs() {
   return (
     <>
       <Head>
@@ -31,7 +26,7 @@ function ApplicationsJobs({ jobs }: { jobs: Job[] }) {
           spacing={3}
         >
           <Grid item xs={12}>
-            <Jobs jobs={jobs} />
+            <Jobs />
           </Grid>
         </Grid>
       </Container>
@@ -43,39 +38,5 @@ function ApplicationsJobs({ jobs }: { jobs: Job[] }) {
 ApplicationsJobs.getLayout = (page: ReactElement) => (
   <SidebarLayout>{page}</SidebarLayout>
 );
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const supabase = createServerSupabaseClient(context);
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  const jobs = await prisma.job.findMany({
-    include: {
-      project: true,
-    },
-    where: {
-      project: {
-        organization: {
-          users: {
-            some: {
-              authId: session?.user.id!,
-            },
-          },
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-  const jobsWithLogs = await Promise.all(jobs.map(getJobWithSignedUrls));
-
-  return {
-    props: {
-      jobs: JSON.parse(JSON.stringify(jobsWithLogs)),
-    },
-  };
-};
 
 export default ApplicationsJobs;

@@ -16,6 +16,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { useState } from "react";
+import { JobsProvider } from "@contexts/JobsContext";
+import { TemplatesProvider } from "@contexts/TemplatesContext";
+import { ProjectsProvider } from "@contexts/ProjectsContext";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -54,7 +57,13 @@ function MyApp(props: MyAppProps) {
               supabaseClient={supabase}
               initialSession={pageProps.initialSession}
             >
-              {getLayout(<Component {...pageProps} />)}
+              <JobsProvider>
+                <TemplatesProvider>
+                  <ProjectsProvider>
+                    {getLayout(<Component {...pageProps} />)}
+                  </ProjectsProvider>
+                </TemplatesProvider>
+              </JobsProvider>
             </SessionContextProvider>
           </LocalizationProvider>
         </ThemeProvider>

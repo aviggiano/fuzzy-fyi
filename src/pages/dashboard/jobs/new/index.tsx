@@ -7,18 +7,8 @@ import Footer from "@components/Footer";
 
 import NewJob from "@content/Dashboard/Jobs/NewJob";
 import { ReactElement } from "react";
-import { GetServerSideProps } from "next";
-import { Project, Template } from "@prisma/client";
-import prisma from "@services/prisma";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
-function ApplicationsTransactions({
-  projects,
-  templates,
-}: {
-  projects: Project[];
-  templates: Template[];
-}) {
+function ApplicationsTransactions() {
   return (
     <>
       <Head>
@@ -36,7 +26,7 @@ function ApplicationsTransactions({
           spacing={3}
         >
           <Grid item xs={12}>
-            <NewJob projects={projects} templates={templates} />
+            <NewJob />
           </Grid>
         </Grid>
       </Container>
@@ -48,52 +38,5 @@ function ApplicationsTransactions({
 ApplicationsTransactions.getLayout = (page: ReactElement) => (
   <SidebarLayout>{page}</SidebarLayout>
 );
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const supabase = createServerSupabaseClient(context);
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  const [projects, templates] = await Promise.all([
-    prisma.project.findMany({
-      where: {
-        organization: {
-          users: {
-            some: {
-              authId: session?.user.id!,
-            },
-          },
-        },
-      },
-    }),
-    prisma.template.findMany({
-      include: {
-        project: true,
-      },
-      where: {
-        project: {
-          organization: {
-            users: {
-              some: {
-                authId: session?.user.id!,
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    }),
-  ]);
-
-  return {
-    props: {
-      projects: JSON.parse(JSON.stringify(projects)),
-      templates: JSON.parse(JSON.stringify(templates)),
-    },
-  };
-};
 
 export default ApplicationsTransactions;

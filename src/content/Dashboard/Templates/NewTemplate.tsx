@@ -11,45 +11,24 @@ import { Project } from "@prisma/client";
 
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/router";
 import { config } from "@config";
-import { supabase } from "@services/supabase";
 import { useSession, useUser } from "@supabase/auth-helpers-react";
+import { TemplatesContext } from "@contexts/TemplatesContext";
 
 function NewTemplate({ projects }: { projects?: Project[] }) {
-  const router = useRouter();
+  const { createTemplate, isCreatingTemplate } = useContext(TemplatesContext);
 
-  const [active, setIsActive] = useState(true);
   const [project, setProject] = useState<Project | undefined>(
     projects ? projects[0] : undefined
   );
   const [cmd, setCmd] = useState<string>();
   const instanceTypes = config.aws.ec2.instanceTypes;
   const [instanceType, setInstanceType] = useState<string>(instanceTypes[0]);
-  const session = useSession();
-  const user = useUser();
 
   const onClick = () => {
-    setIsActive(false);
-    (async () => {
-      await fetch(`${config.backend.url}/api/template`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          AuthId: user?.id!,
-          Authorization: "Bearer " + session?.access_token,
-        },
-        body: JSON.stringify({
-          projectId: project?.id,
-          instanceType,
-          cmd,
-        }),
-      });
-      router.push("/dashboard/templates");
-      setIsActive(true);
-    })();
+    createTemplate({ project: project!, cmd: cmd!, instanceType });
   };
 
   return (
@@ -121,13 +100,13 @@ function NewTemplate({ projects }: { projects?: Project[] }) {
                 </div>
                 <Button
                   sx={{ mt: { xs: 2, md: 0 } }}
-                  variant={active ? "contained" : "outlined"}
+                  variant={isCreatingTemplate ? "outlined" : "contained"}
                   style={{
                     marginLeft: "auto",
                     marginRight: "9px",
                   }}
                   onClick={onClick}
-                  disabled={!active}
+                  disabled={isCreatingTemplate}
                 >
                   Create template
                 </Button>

@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useMemo, useState } from "react";
 import { JobStatus, Job, Project } from "@prisma/client";
 import {
   Tooltip,
@@ -22,6 +22,7 @@ import {
   useTheme,
   CardHeader,
   SelectChangeEvent,
+  Skeleton,
 } from "@mui/material";
 
 import Label from "@components/Label";
@@ -30,10 +31,9 @@ import CodeTwoToneIcon from "@mui/icons-material/CodeTwoTone";
 import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
 import BulkActions from "./BulkActions";
 import { formatDistanceToNow } from "date-fns";
-import { useRouter } from "next/router";
-import { config } from "@config";
 import { color, formatTimeElapsed, label } from "@services/jobUtils";
 import Link from "next/link";
+import { JobsContext } from "@contexts/JobsContext";
 
 interface Filters {
   status?: JobStatus;
@@ -73,10 +73,36 @@ function Interval({ job }: { job: Job }) {
   return <>{formatted}</>;
 }
 
-function Jobs({ jobs }: { jobs?: Job[] }) {
-  const router = useRouter();
+const JobSkeleton = () => (
+  <TableRow>
+    <TableCell>
+      <Skeleton />
+    </TableCell>
+    <TableCell>
+      <Skeleton />
+    </TableCell>
+    <TableCell>
+      <Skeleton />
+    </TableCell>
+    <TableCell>
+      <Skeleton />
+    </TableCell>
+    <TableCell>
+      <Skeleton />
+    </TableCell>
+    <TableCell>
+      <Skeleton />
+    </TableCell>
+    <TableCell>
+      <Skeleton />
+    </TableCell>
+  </TableRow>
+);
+
+function Jobs() {
+  const { jobs, isLoadingJobs, deleteJob, isDeletingJob } =
+    useContext(JobsContext);
   const [selectedJobs, setSelectedJobs] = useState<string[]>([]);
-  const [active, setActive] = useState(true);
   const selectedBulkActions = selectedJobs.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
@@ -101,7 +127,7 @@ function Jobs({ jobs }: { jobs?: Job[] }) {
 
   const handleSelectAllJobs = (event: ChangeEvent<HTMLInputElement>): void => {
     setSelectedJobs(
-      event.target.checked ? jobs?.map((job: Job) => job.id) || [] : []
+      event.target.checked ? jobs.map((job: Job) => job.id) || [] : []
     );
   };
 
@@ -124,21 +150,11 @@ function Jobs({ jobs }: { jobs?: Job[] }) {
     setLimit(parseInt(event.target.value));
   };
 
-  const deleteJob = (jobId: string): void => {
-    setActive(false);
-    fetch(`${config.backend.url}/api/job/${jobId}`, {
-      method: "DELETE",
-    }).then(() => {
-      router.push("/dashboard/jobs");
-      setActive(true);
-    });
-  };
-
   const filteredJobs = applyFilters(jobs || [], filters);
   const paginatedJobs = applyPagination(filteredJobs, page, limit);
   const selectedSomeJobs =
-    selectedJobs.length > 0 && selectedJobs.length < (jobs?.length || 0);
-  const selectedAllJobs = selectedJobs.length === jobs?.length;
+    selectedJobs.length > 0 && selectedJobs.length < (jobs.length || 0);
+  const selectedAllJobs = selectedJobs.length === jobs.length;
   const theme = useTheme();
 
   return (
@@ -195,143 +211,164 @@ function Jobs({ jobs }: { jobs?: Job[] }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedJobs.map((job) => {
-                const isJobSelected = selectedJobs.includes(job.id);
-                return (
-                  <TableRow hover key={job.id} selected={isJobSelected}>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isJobSelected}
-                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                          handleSelectOneJob(event, job.id)
-                        }
-                        value={isJobSelected}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        color="text.primary"
-                        gutterBottom
-                      >
-                        <Link href={`/dashboard/jobs/${job.id}`}>{job.id}</Link>
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" noWrap>
-                        {formatDistanceToNow(new Date(job.createdAt)) + " ago"}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        color="text.secondary"
-                        gutterBottom
-                        maxWidth="260px"
-                      >
-                        {job.cmd}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        color="text.primary"
-                        gutterBottom
-                        noWrap
-                      >
-                        {job.instanceId}
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        color="text.secondary"
-                        noWrap
-                      >
-                        {job.instanceType}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" noWrap>
-                        <Interval job={job} />
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        color="text.primary"
-                        gutterBottom
-                        noWrap
-                      >
-                        {((job as any).project as Project).name}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="text.secondary" noWrap>
-                        {getStatusLabel(job.status)}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      {!job.status.startsWith("FINISHED") &&
-                      job.status !== "STOPPED" ? (
-                        <Tooltip title="Stop Job" arrow>
-                          <IconButton
-                            sx={{
-                              "&:hover": {
-                                background: theme.colors.error.lighter,
-                              },
-                              color: theme.palette.error.main,
-                            }}
-                            color="inherit"
-                            size="small"
-                            onClick={() => deleteJob(job.id)}
-                            disabled={!active}
+              {isLoadingJobs
+                ? Array(limit)
+                    .fill(undefined)
+                    .map((_, i) => <JobSkeleton key={i} />)
+                : paginatedJobs.map((job) => {
+                    const isJobSelected = selectedJobs.includes(job.id);
+                    return (
+                      <TableRow hover key={job.id} selected={isJobSelected}>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            checked={isJobSelected}
+                            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                              handleSelectOneJob(event, job.id)
+                            }
+                            value={isJobSelected}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            variant="body1"
+                            fontWeight="bold"
+                            color="text.primary"
+                            gutterBottom
                           >
-                            <CancelTwoToneIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      ) : (
-                        <>
-                          {job.coverageUrl ? (
-                            <Tooltip title="View Coverage" arrow>
+                            <Link href={`/dashboard/jobs/${job.id}`}>
+                              {job.id}
+                            </Link>
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            noWrap
+                          >
+                            {formatDistanceToNow(new Date(job.createdAt)) +
+                              " ago"}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            variant="body1"
+                            fontWeight="bold"
+                            color="text.secondary"
+                            gutterBottom
+                            maxWidth="260px"
+                          >
+                            {job.cmd}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            variant="body1"
+                            fontWeight="bold"
+                            color="text.primary"
+                            gutterBottom
+                            noWrap
+                          >
+                            {job.instanceId}
+                          </Typography>
+                          <Typography
+                            variant="body1"
+                            fontWeight="bold"
+                            color="text.secondary"
+                            noWrap
+                          >
+                            {job.instanceType}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            noWrap
+                          >
+                            <Interval job={job} />
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            variant="body1"
+                            fontWeight="bold"
+                            color="text.primary"
+                            gutterBottom
+                            noWrap
+                          >
+                            {((job as any).project as Project).name}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            noWrap
+                          >
+                            {getStatusLabel(job.status)}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="center">
+                          {!job.status.startsWith("FINISHED") &&
+                          job.status !== "STOPPED" ? (
+                            <Tooltip title="Stop Job" arrow>
                               <IconButton
                                 sx={{
                                   "&:hover": {
-                                    background: theme.colors.info.lighter,
+                                    background: theme.colors.error.lighter,
                                   },
-                                  color: theme.palette.info.main,
+                                  color: theme.palette.error.main,
                                 }}
                                 color="inherit"
                                 size="small"
-                                onClick={() => window.open(job.coverageUrl!)}
+                                onClick={() => deleteJob(job.id)}
+                                disabled={isDeletingJob}
                               >
-                                <CodeTwoToneIcon fontSize="small" />
+                                <CancelTwoToneIcon fontSize="small" />
                               </IconButton>
                             </Tooltip>
-                          ) : null}
-                          {job.logsUrl ? (
-                            <Tooltip title="View Logs" arrow>
-                              <IconButton
-                                sx={{
-                                  "&:hover": {
-                                    background: theme.colors.info.lighter,
-                                  },
-                                  color: theme.palette.info.main,
-                                }}
-                                color="inherit"
-                                size="small"
-                                onClick={() => window.open(job.logsUrl!)}
-                              >
-                                <ArticleTwoToneIcon fontSize="small" />
-                              </IconButton>
-                            </Tooltip>
-                          ) : null}
-                        </>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                          ) : (
+                            <>
+                              {job.coverageUrl ? (
+                                <Tooltip title="View Coverage" arrow>
+                                  <IconButton
+                                    sx={{
+                                      "&:hover": {
+                                        background: theme.colors.info.lighter,
+                                      },
+                                      color: theme.palette.info.main,
+                                    }}
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() =>
+                                      window.open(job.coverageUrl!)
+                                    }
+                                  >
+                                    <CodeTwoToneIcon fontSize="small" />
+                                  </IconButton>
+                                </Tooltip>
+                              ) : null}
+                              {job.logsUrl ? (
+                                <Tooltip title="View Logs" arrow>
+                                  <IconButton
+                                    sx={{
+                                      "&:hover": {
+                                        background: theme.colors.info.lighter,
+                                      },
+                                      color: theme.palette.info.main,
+                                    }}
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() => window.open(job.logsUrl!)}
+                                  >
+                                    <ArticleTwoToneIcon fontSize="small" />
+                                  </IconButton>
+                                </Tooltip>
+                              ) : null}
+                            </>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
             </TableBody>
           </Table>
         </TableContainer>

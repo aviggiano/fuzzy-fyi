@@ -6,64 +6,42 @@ import {
   Divider,
   MenuItem,
   Button,
+  Skeleton,
 } from "@mui/material";
 import { Project, Template } from "@prisma/client";
 
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { ChangeEvent, useState } from "react";
-import { useRouter } from "next/router";
+import { ChangeEvent, useContext, useState } from "react";
 import { config } from "@config";
-import { useSession, useUser } from "@supabase/auth-helpers-react";
+import { JobsContext } from "@contexts/JobsContext";
+import { ProjectsContext } from "@contexts/ProjectsContext";
+import { TemplatesContext } from "@contexts/TemplatesContext";
 
-function NewJob({
-  projects,
-  templates,
-}: {
-  projects?: Project[];
-  templates?: Template[];
-}) {
-  const router = useRouter();
+function NewJob() {
+  const { projects, isLoadingProjects } = useContext(ProjectsContext);
+  const { templates, isLoadingTemplates } = useContext(TemplatesContext);
+  const { createJob, isCreatingJob } = useContext(JobsContext);
 
-  const [active, setIsActive] = useState(true);
-  const [project, setProject] = useState<Project | undefined>(
-    projects ? projects[0] : undefined
-  );
+  const [project, setProject] = useState<Project | undefined>(projects[0]);
   const [template, setTemplate] = useState<Template | undefined>();
   const [ref, setRef] = useState<string>("main");
   const [cmd, setCmd] = useState<string>();
   const instanceTypes = config.aws.ec2.instanceTypes;
   const [instanceType, setInstanceType] = useState<string>(instanceTypes[0]);
-  const session = useSession();
-  const user = useUser();
 
-  const onClick = () => {
-    setIsActive(false);
-    (async () => {
-      await fetch(`${config.backend.url}/api/job`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          AuthId: user?.id!,
-          Authorization: "Bearer " + session?.access_token,
-        },
-        body: JSON.stringify({
-          projectId: project?.id,
-          templateId: template?.id,
-          instanceType,
-          ref,
-          cmd,
-        }),
-      });
-      router.push("/dashboard/jobs");
-      setIsActive(true);
-    })();
-  };
+  const onClick = () =>
+    createJob({
+      project: project!,
+      instanceType,
+      ref,
+      cmd: cmd!,
+      template,
+    });
 
   const onChangeTemplate = (e: ChangeEvent<HTMLInputElement>) => {
-    const template = templates?.find((t) => t.id === e.target.value)!;
-    const project = projects?.find((p) => p.id === template.projectId)!;
+    const template = templates.find((t) => t.id === e.target.value)!;
+    const project = projects.find((p) => p.id === template.projectId)!;
     setTemplate(template);
     setCmd(template.cmd);
     setInstanceType(template.instanceType);
@@ -104,15 +82,21 @@ function NewJob({
                     value={project?.name}
                     onChange={(e) =>
                       setProject(
-                        projects?.find((p) => p.name === e.target.value)!
+                        projects.find((p) => p.name === e.target.value)!
                       )
                     }
                   >
-                    {projects?.map((project) => (
-                      <MenuItem key={project.id} value={project.name}>
-                        {project.name}
+                    {isLoadingProjects ? (
+                      <MenuItem>
+                        <Skeleton />
                       </MenuItem>
-                    ))}
+                    ) : (
+                      projects.map((project) => (
+                        <MenuItem key={project.id} value={project.name}>
+                          {project.name}
+                        </MenuItem>
+                      ))
+                    )}
                   </TextField>
                   <TextField
                     id="outlined-select-template"
@@ -121,11 +105,17 @@ function NewJob({
                     value={template?.id}
                     onChange={onChangeTemplate}
                   >
-                    {templates?.map((template) => (
-                      <MenuItem key={template.id} value={template.id}>
-                        {template.id}
+                    {isLoadingTemplates ? (
+                      <MenuItem>
+                        <Skeleton />
                       </MenuItem>
-                    ))}
+                    ) : (
+                      templates.map((template) => (
+                        <MenuItem key={template.id} value={template.id}>
+                          {template.id}
+                        </MenuItem>
+                      ))
+                    )}
                   </TextField>
                   <TextField
                     id="outlined-select-instance-type"
@@ -160,13 +150,15 @@ function NewJob({
                 </div>
                 <Button
                   sx={{ mt: { xs: 2, md: 0 } }}
-                  variant={active ? "contained" : "outlined"}
+                  variant={isCreatingJob ? "outlined" : "contained"}
                   style={{
                     marginLeft: "auto",
                     marginRight: "9px",
                   }}
                   onClick={onClick}
-                  disabled={!active}
+                  disabled={
+                    isCreatingJob || isLoadingProjects || isLoadingTemplates
+                  }
                 >
                   Create job
                 </Button>

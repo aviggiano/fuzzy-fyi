@@ -7,11 +7,9 @@ import Footer from "@components/Footer";
 
 import Job from "@content/Dashboard/Jobs/Job";
 import { ReactElement } from "react";
-import { GetServerSideProps, NextApiRequest } from "next";
+import { GetServerSideProps } from "next";
 import prisma from "@services/prisma";
 import { getJobWithSignedUrls } from "@services/jobUtils";
-import { getApiKeyOrThrow } from "@services/auth";
-import { NextRequest } from "next/server";
 
 function ApplicationsTransactions({
   job,

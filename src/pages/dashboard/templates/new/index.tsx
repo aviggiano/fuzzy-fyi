@@ -12,7 +12,7 @@ import { Project } from "@prisma/client";
 import prisma from "@services/prisma";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
-function ApplicationsTransactions({ projects }: { projects: Project[] }) {
+function ApplicationsTransactions() {
   return (
     <>
       <Head>
@@ -30,7 +30,7 @@ function ApplicationsTransactions({ projects }: { projects: Project[] }) {
           spacing={3}
         >
           <Grid item xs={12}>
-            <NewTemplate projects={projects} />
+            <NewTemplate />
           </Grid>
         </Grid>
       </Container>
@@ -42,28 +42,5 @@ function ApplicationsTransactions({ projects }: { projects: Project[] }) {
 ApplicationsTransactions.getLayout = (page: ReactElement) => (
   <SidebarLayout>{page}</SidebarLayout>
 );
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const supabase = createServerSupabaseClient(context);
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  const projects = await prisma.project.findMany({
-    where: {
-      organization: {
-        users: {
-          some: {
-            authId: session?.user.id!,
-          },
-        },
-      },
-    },
-  });
-  return {
-    props: {
-      projects: JSON.parse(JSON.stringify(projects)),
-    },
-  };
-};
 
 export default ApplicationsTransactions;

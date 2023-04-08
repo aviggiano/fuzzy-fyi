@@ -1,9 +1,10 @@
 import { useState, ReactNode, createContext } from "react";
-type SidebarContext = {
+
+interface SidebarContext {
   sidebarToggle: any;
   toggleSidebar: () => void;
   closeSidebar: () => void;
-};
+}
 
 export const SidebarContext = createContext<SidebarContext>(
   {} as SidebarContext
