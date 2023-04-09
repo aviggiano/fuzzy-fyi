@@ -21,6 +21,9 @@ export const config = {
       token: process.env.GITHUB_AUTH_TOKEN!,
     },
   },
+  git: {
+    sha: process.env.GIT_SHA || "HEAD",
+  },
   backend: {
     url:
       process.env.NODE_ENV === "production"

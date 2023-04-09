@@ -1,3 +1,4 @@
+import { config } from "@config";
 import { Box, Container, Link, Typography, styled } from "@mui/material";
 
 const FooterWrapper = styled(Container)(
@@ -29,6 +30,7 @@ function Footer() {
             href="https://github.com/aviggiano/fuzzy-fyi"
             target="_blank"
             rel="noopener noreferrer"
+            title={config.git.sha}
           >
             Contribute
           </Link>
