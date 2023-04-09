@@ -2,11 +2,19 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const Home = () => {
   const router = useRouter();
   const session = useSession();
   const supabase = useSupabaseClient();
+  const [display, setDisplay] = useState("none");
+
+  useEffect(() => {
+    let ts = setTimeout(() => setDisplay(""));
+
+    return () => clearTimeout(ts);
+  }, []);
 
   if (session) {
     router.push("/dashboard/jobs");
@@ -22,7 +30,7 @@ const Home = () => {
           height: "100vh",
         }}
       >
-        <div style={{ width: "320px" }}>
+        <div style={{ width: "320px", display }}>
           {!session ? (
             <Auth
               supabaseClient={supabase}
