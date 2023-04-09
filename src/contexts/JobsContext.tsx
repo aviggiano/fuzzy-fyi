@@ -43,21 +43,25 @@ export function JobsProvider({ children }: Props) {
   const [jobs, setJobs] = useState([]);
   const session = useSession();
 
-  const getJobs = useCallback(() => {
-    setIsLoadingJobs(true);
-    fetch(`${config.backend.url}/api/job`, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + session?.access_token,
-      },
-    })
-      .then((res) => res.json())
-      .then((j) => {
-        setJobs(j);
-        setIsLoadingJobs(false);
-      });
-  }, [session?.access_token]);
+  const getJobs = useCallback(
+    (callback?: () => void) => {
+      setIsLoadingJobs(true);
+      fetch(`${config.backend.url}/api/job`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + session?.access_token,
+        },
+      })
+        .then((res) => res.json())
+        .then((j) => {
+          setJobs(j);
+          setIsLoadingJobs(false);
+          if (callback) callback();
+        });
+    },
+    [session?.access_token]
+  );
 
   useEffect(() => {
     if (!session?.access_token) return;
@@ -69,10 +73,14 @@ export function JobsProvider({ children }: Props) {
     setIsDeletingJob(true);
     fetch(`${config.backend.url}/api/job/${jobId}`, {
       method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + session?.access_token,
+      },
     }).then(() => {
       setIsDeletingJob(false);
-      getJobs();
-      router.push("/dashboard/jobs");
+      getJobs(() => router.push("/dashboard/jobs"));
     });
   };
 
@@ -101,9 +109,8 @@ export function JobsProvider({ children }: Props) {
           cmd,
         }),
       });
-      getJobs();
       setIsCreatingJob(false);
-      router.push("/dashboard/jobs");
+      getJobs(() => router.push("/dashboard/jobs"));
     })();
   };
 

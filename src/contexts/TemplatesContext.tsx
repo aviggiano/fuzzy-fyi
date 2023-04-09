@@ -35,21 +35,25 @@ export function TemplatesProvider({ children }: Props) {
   const [templates, setTemplates] = useState([]);
   const session = useSession();
 
-  const getTemplates = useCallback(() => {
-    setIsLoadingTemplates(true);
-    fetch(`${config.backend.url}/api/template`, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + session?.access_token,
-      },
-    })
-      .then((res) => res.json())
-      .then((j) => {
-        setTemplates(j);
-        setIsLoadingTemplates(false);
-      });
-  }, [session?.access_token]);
+  const getTemplates = useCallback(
+    (callback?: () => void) => {
+      setIsLoadingTemplates(true);
+      fetch(`${config.backend.url}/api/template`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + session?.access_token,
+        },
+      })
+        .then((res) => res.json())
+        .then((j) => {
+          setIsLoadingTemplates(false);
+          setTemplates(j);
+          if (callback) callback();
+        });
+    },
+    [session?.access_token]
+  );
 
   useEffect(() => {
     if (!session?.access_token) return;
@@ -80,8 +84,7 @@ export function TemplatesProvider({ children }: Props) {
         }),
       });
       setIsCreatingTemplate(false);
-      getTemplates();
-      router.push("/dashboard/templates");
+      getTemplates(() => router.push("/dashboard/templates"));
     })();
   };
 
