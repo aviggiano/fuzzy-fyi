@@ -54,6 +54,14 @@ export const color: Record<JobStatus, LabelProps["color"]> = {
   STOPPED: "warning",
 };
 
+export const colorMap: Record<JobStatus, string> = {
+  STARTED: "#007ec6",
+  RUNNING: "#007ec6",
+  FINISHED_SUCCESS: "#97ca00",
+  FINISHED_ERROR: "#e05d44",
+  STOPPED: "#dfb317",
+};
+
 export const label: Record<JobStatus, string> = {
   STARTED: "Started",
   RUNNING: "Running",
