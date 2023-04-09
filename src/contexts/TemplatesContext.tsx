@@ -1,4 +1,10 @@
-import { useState, ReactNode, createContext, useEffect } from "react";
+import {
+  useState,
+  ReactNode,
+  createContext,
+  useEffect,
+  useCallback,
+} from "react";
 import { Template, Project } from "@prisma/client";
 import { config } from "@config";
 import { useSession } from "@supabase/auth-helpers-react";
@@ -29,9 +35,7 @@ export function TemplatesProvider({ children }: Props) {
   const [templates, setTemplates] = useState([]);
   const session = useSession();
 
-  useEffect(() => {
-    if (!session?.access_token) return;
-
+  const getTemplates = useCallback(() => {
     setIsLoadingTemplates(true);
     fetch(`${config.backend.url}/api/template`, {
       headers: {
@@ -46,6 +50,12 @@ export function TemplatesProvider({ children }: Props) {
         setIsLoadingTemplates(false);
       });
   }, [session?.access_token]);
+
+  useEffect(() => {
+    if (!session?.access_token) return;
+
+    getTemplates();
+  }, [session?.access_token, getTemplates]);
 
   const createTemplate = (params: {
     project: Project;
@@ -69,8 +79,9 @@ export function TemplatesProvider({ children }: Props) {
           cmd,
         }),
       });
-      router.push("/dashboard/templates");
       setIsCreatingTemplate(false);
+      getTemplates();
+      router.push("/dashboard/templates");
     })();
   };
 

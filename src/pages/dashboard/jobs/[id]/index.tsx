@@ -15,7 +15,7 @@ function ApplicationsTransactions({ jobId }: { jobId: string }) {
   const { getJob } = useContext(JobsContext);
   useEffect(() => {
     getJob(jobId).then(setJob);
-  }, [getJob, jobId]);
+  }, [jobId]);
 
   return (
     <>

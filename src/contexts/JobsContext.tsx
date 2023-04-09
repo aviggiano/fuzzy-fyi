@@ -1,4 +1,10 @@
-import { useState, ReactNode, createContext, useEffect } from "react";
+import {
+  useState,
+  ReactNode,
+  createContext,
+  useEffect,
+  useCallback,
+} from "react";
 import { Job, Project, Template } from "@prisma/client";
 import { config } from "@config";
 import { useSession } from "@supabase/auth-helpers-react";
@@ -37,9 +43,7 @@ export function JobsProvider({ children }: Props) {
   const [jobs, setJobs] = useState([]);
   const session = useSession();
 
-  useEffect(() => {
-    if (!session?.access_token) return;
-
+  const getJobs = useCallback(() => {
     setIsLoadingJobs(true);
     fetch(`${config.backend.url}/api/job`, {
       headers: {
@@ -55,12 +59,19 @@ export function JobsProvider({ children }: Props) {
       });
   }, [session?.access_token]);
 
+  useEffect(() => {
+    if (!session?.access_token) return;
+
+    getJobs();
+  }, [session?.access_token, getJobs]);
+
   const deleteJob = (jobId: string): void => {
     setIsDeletingJob(true);
     fetch(`${config.backend.url}/api/job/${jobId}`, {
       method: "DELETE",
     }).then(() => {
       setIsDeletingJob(false);
+      getJobs();
       router.push("/dashboard/jobs");
     });
   };
@@ -90,8 +101,9 @@ export function JobsProvider({ children }: Props) {
           cmd,
         }),
       });
-      router.push("/dashboard/jobs");
+      getJobs();
       setIsCreatingJob(false);
+      router.push("/dashboard/jobs");
     })();
   };
 
