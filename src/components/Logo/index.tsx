@@ -100,7 +100,7 @@ function Logo() {
         }}
       >
         <LogoTextWrapper>
-          <LogoText>fuzzy.fyi</LogoText>
+          <LogoText>fuzzy</LogoText>
         </LogoTextWrapper>
       </Box>
     </>

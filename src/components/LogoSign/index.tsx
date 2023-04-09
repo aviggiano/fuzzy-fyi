@@ -12,8 +12,8 @@ function LogoSign() {
         alignItems="center"
         gap="16px"
       >
-        <Image src="/fuzzy-fyi.png" width="48" height="48" alt="fuzzy-fyi" />
-        <h1>fuzzy.fyi</h1>
+        <Image src="/fuzzy-fyi.png" width="48" height="48" alt="fuzzy" />
+        <h1>fuzzy</h1>
       </Box>
     </Link>
   );
