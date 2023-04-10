@@ -16,6 +16,11 @@ async function GET(request: NextApiRequest, response: NextApiResponse) {
   const job = await prisma.job.findFirst({
     where: {
       projectId: query.projectId?.toString(),
+      ...(query.ref
+        ? {
+            ref: query.ref.toString(),
+          }
+        : {}),
     },
     orderBy: {
       createdAt: "desc",
