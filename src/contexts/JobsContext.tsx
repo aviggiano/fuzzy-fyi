@@ -10,10 +10,13 @@ import { config } from "@config";
 import { useSession } from "@supabase/auth-helpers-react";
 import router from "next/router";
 
+export interface JobOutput extends Job {
+  coverage?: string;
+  logs?: string;
+}
+
 interface JobsContext {
-  getJob: (
-    jobId: string
-  ) => Promise<Job & { coverage?: string; logs?: string }>;
+  getJob: (jobId: string) => Promise<JobOutput>;
   isLoadingJob: boolean;
   isLoadingJobs: boolean;
   jobs: Job[];

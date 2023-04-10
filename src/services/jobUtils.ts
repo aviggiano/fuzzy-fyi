@@ -46,6 +46,23 @@ export function formatTimeElapsed(job: Job): string {
   return formatted;
 }
 
+export function getEC2Cost(job: Job): string {
+  const end =
+    job.status.startsWith("FINISHED") || job.status === "STOPPED"
+      ? new Date(job.updatedAt)
+      : new Date();
+  const start = new Date(job.createdAt);
+  const ms = end.getTime() - start.getTime();
+
+  const index = config.aws.ec2.instanceTypes.indexOf(job.instanceType);
+  const hourlyCost = Number(config.aws.ec2.instanceHourlyCosts[index]);
+
+  const totalCost = (ms * hourlyCost) / (1000 * 60 * 60);
+  const totalCostRoundUp = +(Math.ceil(Number(`${totalCost}e+2`)) + "e-2");
+
+  return `$${totalCostRoundUp}`;
+}
+
 export const color: Record<JobStatus, LabelProps["color"]> = {
   STARTED: "info",
   RUNNING: "info",

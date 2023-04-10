@@ -31,7 +31,12 @@ import CodeTwoToneIcon from "@mui/icons-material/CodeTwoTone";
 import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
 import BulkActions from "./BulkActions";
 import { formatDistanceToNow } from "date-fns";
-import { color, formatTimeElapsed, label } from "@services/jobUtils";
+import {
+  color,
+  formatTimeElapsed,
+  getEC2Cost,
+  label,
+} from "@services/jobUtils";
 import Link from "next/link";
 import { JobsContext } from "@contexts/JobsContext";
 
@@ -73,29 +78,29 @@ function Interval({ job }: { job: Job }) {
   return <>{formatted}</>;
 }
 
+function Cost({ job }: { job: Job }) {
+  const [cost, setCost] = useState(getEC2Cost(job));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCost(getEC2Cost(job));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [job]);
+
+  return <>{cost}</>;
+}
+
 const JobSkeleton = () => (
   <TableRow>
-    <TableCell>
-      <Skeleton />
-    </TableCell>
-    <TableCell>
-      <Skeleton />
-    </TableCell>
-    <TableCell>
-      <Skeleton />
-    </TableCell>
-    <TableCell>
-      <Skeleton />
-    </TableCell>
-    <TableCell>
-      <Skeleton />
-    </TableCell>
-    <TableCell>
-      <Skeleton />
-    </TableCell>
-    <TableCell>
-      <Skeleton />
-    </TableCell>
+    {Array(7)
+      .fill(undefined)
+      .map((index) => (
+        <TableCell key={index}>
+          <Skeleton />
+        </TableCell>
+      ))}
   </TableRow>
 );
 
@@ -284,6 +289,13 @@ function Jobs() {
                             noWrap
                           >
                             <Interval job={job} />
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            noWrap
+                          >
+                            <Cost job={job} />
                           </Typography>
                         </TableCell>
                         <TableCell>

@@ -8,10 +8,10 @@ import Footer from "@components/Footer";
 import Job from "@content/Dashboard/Jobs/Job";
 import { ReactElement, useContext, useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
-import { JobsContext } from "@contexts/JobsContext";
+import { JobOutput, JobsContext } from "@contexts/JobsContext";
 
 function ApplicationsTransactions({ jobId }: { jobId: string }) {
-  const [job, setJob] = useState<Job & { coverage?: string; logs?: string }>();
+  const [job, setJob] = useState<JobOutput>();
   const { getJob } = useContext(JobsContext);
   useEffect(() => {
     getJob(jobId).then(setJob);

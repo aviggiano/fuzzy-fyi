@@ -4,16 +4,14 @@ import {
   CardHeader,
   CardContent,
   Divider,
-  MenuItem,
-  Button,
   Container,
   TextField,
   Skeleton,
 } from "@mui/material";
-import { Job } from "@prisma/client";
 
 import Box from "@mui/material/Box";
-import { formatTimeElapsed, label } from "@services/jobUtils";
+import { formatTimeElapsed, getEC2Cost, label } from "@services/jobUtils";
+import { JobOutput } from "@contexts/JobsContext";
 
 const style = `
 code {
@@ -33,12 +31,12 @@ code {
 }
 `;
 
-function Job({ job }: { job?: Job & { coverage?: string; logs?: string } }) {
+function Job({ job }: { job?: JobOutput }) {
   return (
     <>
       <Container maxWidth="lg">
         {!job ? (
-          <Skeleton />
+          <Skeleton height={400} />
         ) : (
           <Grid
             container
@@ -76,6 +74,11 @@ function Job({ job }: { job?: Job & { coverage?: string; logs?: string } }) {
                     <TextField
                       label="Elapsed"
                       defaultValue={formatTimeElapsed(job)}
+                      disabled
+                    />
+                    <TextField
+                      label="Cost"
+                      defaultValue={getEC2Cost(job)}
                       disabled
                     />
                     <TextField

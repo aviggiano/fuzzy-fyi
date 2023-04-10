@@ -11,6 +11,7 @@ export const config = {
         process.env.AAWS_EC2_SECRET_ACCESS_KEY ||
         process.env.AWS_EC2_SECRET_ACCESS_KEY!,
       instanceTypes: ["c5.large", "c5.xlarge", "c5.2xlarge"],
+      instanceHourlyCosts: ["0.085", "0.17", "0.34"],
     },
     s3: {
       bucket: process.env.AAWS_S3_BUCKET || process.env.AWS_S3_BUCKET!,
