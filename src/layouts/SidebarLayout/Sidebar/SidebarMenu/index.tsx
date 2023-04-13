@@ -15,7 +15,6 @@ import { SidebarContext } from "@contexts/SidebarContext";
 
 import DesignServicesTwoToneIcon from "@mui/icons-material/DesignServicesTwoTone";
 import BrightnessLowTwoToneIcon from "@mui/icons-material/BrightnessLowTwoTone";
-import MmsTwoToneIcon from "@mui/icons-material/MmsTwoTone";
 import TableChartTwoToneIcon from "@mui/icons-material/TableChartTwoTone";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import BallotTwoToneIcon from "@mui/icons-material/BallotTwoTone";
@@ -23,7 +22,6 @@ import BeachAccessTwoToneIcon from "@mui/icons-material/BeachAccessTwoTone";
 import EmojiEventsTwoToneIcon from "@mui/icons-material/EmojiEventsTwoTone";
 import FilterVintageTwoToneIcon from "@mui/icons-material/FilterVintageTwoTone";
 import HowToVoteTwoToneIcon from "@mui/icons-material/HowToVoteTwoTone";
-import LocalPharmacyTwoToneIcon from "@mui/icons-material/LocalPharmacyTwoTone";
 import RedeemTwoToneIcon from "@mui/icons-material/RedeemTwoTone";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import TrafficTwoToneIcon from "@mui/icons-material/TrafficTwoTone";
@@ -194,6 +192,20 @@ function SidebarMenu() {
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
+                <NextLink href="/dashboard/projects" passHref>
+                  <Button
+                    className={
+                      currentRoute === "/dashboard/projects" ? "active" : ""
+                    }
+                    disableRipple
+                    onClick={closeSidebar}
+                    startIcon={<BallotTwoToneIcon />}
+                  >
+                    Projects
+                  </Button>
+                </NextLink>
+              </ListItem>
+              <ListItem component="div">
                 <NextLink href="/dashboard/templates" passHref>
                   <Button
                     className={
@@ -228,39 +240,23 @@ function SidebarMenu() {
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
-              Accounts
+              Account
             </ListSubheader>
           }
         >
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
-                <NextLink href="/management/profile" passHref>
+                <NextLink href="/profile/settings" passHref>
                   <Button
                     className={
-                      currentRoute === "/management/profile" ? "active" : ""
-                    }
-                    disableRipple
-                    onClick={closeSidebar}
-                    startIcon={<AccountCircleTwoToneIcon />}
-                  >
-                    User Profile
-                  </Button>
-                </NextLink>
-              </ListItem>
-              <ListItem component="div">
-                <NextLink href="/management/profile/settings" passHref>
-                  <Button
-                    className={
-                      currentRoute === "/management/profile/settings"
-                        ? "active"
-                        : ""
+                      currentRoute === "/profile/settings" ? "active" : ""
                     }
                     disableRipple
                     onClick={closeSidebar}
                     startIcon={<DisplaySettingsTwoToneIcon />}
                   >
-                    Account Settings
+                    Settings
                   </Button>
                 </NextLink>
               </ListItem>

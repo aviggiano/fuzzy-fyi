@@ -1,5 +1,5 @@
 import { ChangeEvent, useContext, useState } from "react";
-import { Template, Project } from "@prisma/client";
+import { Project } from "@prisma/client";
 import {
   Divider,
   Box,
@@ -19,22 +19,19 @@ import {
   Skeleton,
 } from "@mui/material";
 
-import BulkActions from "./BulkActions";
-import { TemplatesContext } from "@contexts/TemplatesContext";
+import BulkActions from "../Projects/BulkActions";
+import { ProjectsContext } from "@contexts/ProjectsContext";
 
 const applyPagination = (
-  templates: Template[],
+  projects: Project[],
   page: number,
   limit: number
-): Template[] => {
-  return templates.slice(page * limit, page * limit + limit);
+): Project[] => {
+  return projects.slice(page * limit, page * limit + limit);
 };
 
-const TemplateSkeleton = () => (
+const ProjectSkeleton = () => (
   <TableRow>
-    <TableCell>
-      <Skeleton />
-    </TableCell>
     <TableCell>
       <Skeleton />
     </TableCell>
@@ -50,31 +47,31 @@ const TemplateSkeleton = () => (
   </TableRow>
 );
 
-function Templates() {
-  const { templates, isLoadingTemplates } = useContext(TemplatesContext);
-  const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
-  const selectedBulkActions = selectedTemplates.length > 0;
+function Projects() {
+  const { projects, isLoadingProjects } = useContext(ProjectsContext);
+  const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
+  const selectedBulkActions = selectedProjects.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
 
-  const handleSelectAllTemplates = (
+  const handleSelectAllProjects = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    setSelectedTemplates(
+    setSelectedProjects(
       event.target.checked
-        ? templates.map((template: Template) => template.id) || []
+        ? projects.map((project: Project) => project.id) || []
         : []
     );
   };
 
-  const handleSelectOneTemplate = (
+  const handleSelectOneProject = (
     _event: ChangeEvent<HTMLInputElement>,
     id: string
   ): void => {
-    if (!selectedTemplates.includes(id)) {
-      setSelectedTemplates((prevSelected) => [...prevSelected, id]);
+    if (!selectedProjects.includes(id)) {
+      setSelectedProjects((prevSelected) => [...prevSelected, id]);
     } else {
-      setSelectedTemplates((prevSelected) =>
+      setSelectedProjects((prevSelected) =>
         prevSelected.filter((id) => id !== id)
       );
     }
@@ -88,11 +85,11 @@ function Templates() {
     setLimit(parseInt(event.target.value));
   };
 
-  const paginatedTemplates = applyPagination(templates || [], page, limit);
-  const selectedSomeTemplates =
-    selectedTemplates.length > 0 &&
-    selectedTemplates.length < (templates.length || 0);
-  const selectedAllTemplates = selectedTemplates.length === templates.length;
+  const paginatedProjects = applyPagination(projects || [], page, limit);
+  const selectedSomeProjects =
+    selectedProjects.length > 0 &&
+    selectedProjects.length < (projects.length || 0);
+  const selectedAllProjects = selectedProjects.length === projects.length;
 
   return (
     <Card>
@@ -110,40 +107,39 @@ function Templates() {
                 <TableCell padding="checkbox">
                   <Checkbox
                     color="primary"
-                    checked={selectedAllTemplates}
-                    indeterminate={selectedSomeTemplates}
-                    onChange={handleSelectAllTemplates}
+                    checked={selectedAllProjects}
+                    indeterminate={selectedSomeProjects}
+                    onChange={handleSelectAllProjects}
                   />
                 </TableCell>
-                <TableCell>Template ID</TableCell>
-                <TableCell>Command</TableCell>
-                <TableCell>Instance Type</TableCell>
-                <TableCell>Project</TableCell>
+                <TableCell>Project ID</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>URL</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {isLoadingTemplates
+              {isLoadingProjects
                 ? Array(limit)
                     .fill(undefined)
-                    .map((_, i) => <TemplateSkeleton key={i} />)
-                : paginatedTemplates.map((template) => {
-                    const isTemplateSelected = selectedTemplates.includes(
-                      template.id
+                    .map((_, i) => <ProjectSkeleton key={i} />)
+                : paginatedProjects.map((project) => {
+                    const isProjectSelected = selectedProjects.includes(
+                      project.id
                     );
                     return (
                       <TableRow
                         hover
-                        key={template.id}
-                        selected={isTemplateSelected}
+                        key={project.id}
+                        selected={isProjectSelected}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
                             color="primary"
-                            checked={isTemplateSelected}
+                            checked={isProjectSelected}
                             onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                              handleSelectOneTemplate(event, template.id)
+                              handleSelectOneProject(event, project.id)
                             }
-                            value={isTemplateSelected}
+                            value={isProjectSelected}
                           />
                         </TableCell>
                         <TableCell>
@@ -153,18 +149,17 @@ function Templates() {
                             color="text.primary"
                             gutterBottom
                           >
-                            {template.id}
+                            {project.id}
                           </Typography>
                         </TableCell>
                         <TableCell>
                           <Typography
                             variant="body1"
                             fontWeight="bold"
-                            color="text.secondary"
+                            color="text.primary"
                             gutterBottom
-                            maxWidth="220px"
                           >
-                            {template.cmd}
+                            {project.name}
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -175,18 +170,9 @@ function Templates() {
                             gutterBottom
                             noWrap
                           >
-                            {template.instanceType}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography
-                            variant="body1"
-                            fontWeight="bold"
-                            color="text.primary"
-                            gutterBottom
-                            noWrap
-                          >
-                            {((template as any).project as Project).name}
+                            <a href={project.url} target="_blank">
+                              {project.url}
+                            </a>
                           </Typography>
                         </TableCell>
                       </TableRow>
@@ -198,7 +184,7 @@ function Templates() {
         <Box p={2}>
           <TablePagination
             component="div"
-            count={templates.length || 0}
+            count={projects.length || 0}
             onPageChange={handlePageChange}
             onRowsPerPageChange={handleLimitChange}
             page={page}
@@ -211,4 +197,4 @@ function Templates() {
   );
 }
 
-export default Templates;
+export default Projects;

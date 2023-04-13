@@ -11,6 +11,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function POST(request: NextApiRequest, response: NextApiResponse) {
+  await getApiKeyOrThrow(request);
   const { body } = request;
 
   const template = await prisma.template.create({
