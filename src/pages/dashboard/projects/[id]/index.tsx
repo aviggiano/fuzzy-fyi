@@ -5,16 +5,18 @@ import PageTitleWrapper from "@components/PageTitleWrapper";
 import { Grid, Container } from "@mui/material";
 import Footer from "@components/Footer";
 
-import Project from "@content/Dashboard/Projects/Project";
+import ProjectPage from "@content/Dashboard/Projects/Project";
 import { ReactElement, useContext, useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
 import { ProjectsContext } from "@contexts/ProjectsContext";
+import { Project } from "@prisma/client";
 
 function ApplicationsTransactions({ projectId }: { projectId: string }) {
   const [project, setProject] = useState<Project>();
   const { getProject } = useContext(ProjectsContext);
   useEffect(() => {
     getProject(projectId).then(setProject);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
   return (
@@ -34,7 +36,7 @@ function ApplicationsTransactions({ projectId }: { projectId: string }) {
           spacing={3}
         >
           <Grid item xs={12}>
-            <Project project={project} />
+            <ProjectPage project={project} />
           </Grid>
         </Grid>
       </Container>

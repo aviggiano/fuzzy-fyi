@@ -15,6 +15,7 @@ function ApplicationsTransactions({ jobId }: { jobId: string }) {
   const { getJob } = useContext(JobsContext);
   useEffect(() => {
     getJob(jobId).then(setJob);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobId]);
 
   return (
