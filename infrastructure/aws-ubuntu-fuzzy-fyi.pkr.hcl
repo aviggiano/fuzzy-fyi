@@ -8,7 +8,7 @@ packer {
 }
 
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "fuzzy-fyi-ami-v5"
+  ami_name      = "fuzzy-fyi-ami-v6"
   instance_type = "c5.large"
   region        = "us-east-1"
   source_ami_filter {

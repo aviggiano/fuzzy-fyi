@@ -36,9 +36,7 @@ echo "[$(date)] Install solc-select"
 sudo pip3 install solc-select
 
 echo "[$(date)] Install latest solidity versions"
-SOLC_LATEST=$(solc-select install | tail -1)
-solc-select install | tail -5 | xargs -I{} solc-select install {}
-solc-select use $SOLC_LATEST
+solc-select install | tail -n +2 | xargs -I{} solc-select install {}
 
 echo "[$(date)] Install slither"
 sudo pip3 install slither-analyzer
