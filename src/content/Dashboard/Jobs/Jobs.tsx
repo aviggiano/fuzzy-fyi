@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { JobStatus, Job, Project } from "@prisma/client";
 import {
   Tooltip,
@@ -289,13 +289,6 @@ function Jobs() {
                             noWrap
                           >
                             <Interval job={job} />
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            noWrap
-                          >
-                            <Cost job={job} />
                           </Typography>
                         </TableCell>
                         <TableCell>
