@@ -5,7 +5,7 @@ import prisma from "@services/prisma";
 import * as github from "@services/github";
 import { config } from "@config";
 import { getJobWithSignedUrls } from "@services/jobUtils";
-import { getApiKeyOrThrow } from "@services/auth";
+import { authOrganization } from "@services/auth";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -17,7 +17,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
 async function POST(request: NextApiRequest, response: NextApiResponse) {
   const { body } = request;
-  const apiKey = await getApiKeyOrThrow(request);
+  const organization = await authOrganization(request);
 
   const template = body.templateId
     ? await prisma.template.findFirst({
@@ -33,7 +33,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
       [
         `#!/usr/bin/env bash`,
         `set -u`,
-        `export X_API_KEY=${apiKey}`,
+        `export X_API_KEY=${organization?.apiKey}`,
         `export AWS_ACCESS_KEY_ID=${config.aws.ec2.accessKeyId}`,
         `export AWS_SECRET_ACCESS_KEY=${config.aws.ec2.secretAccessKey}`,
         `set -x`,
@@ -78,7 +78,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function GET(request: NextApiRequest, response: NextApiResponse) {
-  const apiKey = await getApiKeyOrThrow(request);
+  const organization = await authOrganization(request);
   const jobs = await prisma.job.findMany({
     include: {
       project: true,
@@ -86,7 +86,7 @@ async function GET(request: NextApiRequest, response: NextApiResponse) {
     where: {
       project: {
         organization: {
-          apiKey,
+          apiKey: organization?.apiKey,
         },
       },
     },

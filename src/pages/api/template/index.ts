@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@services/prisma";
-import { getApiKeyOrThrow } from "@services/auth";
+import { authOrganization } from "@services/auth";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -11,7 +11,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function POST(request: NextApiRequest, response: NextApiResponse) {
-  await getApiKeyOrThrow(request);
+  await authOrganization(request);
   const { body } = request;
 
   const template = await prisma.template.create({
@@ -24,7 +24,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function GET(request: NextApiRequest, response: NextApiResponse) {
-  const apiKey = await getApiKeyOrThrow(request);
+  const organization = await authOrganization(request);
   const templates = await prisma.template.findMany({
     include: {
       project: true,
@@ -32,7 +32,7 @@ async function GET(request: NextApiRequest, response: NextApiResponse) {
     where: {
       project: {
         organization: {
-          apiKey,
+          apiKey: organization?.apiKey,
         },
       },
     },

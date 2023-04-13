@@ -2,23 +2,26 @@ import crypto from "crypto";
 import prisma from "./prisma";
 import { NextApiRequest } from "next";
 import { supabase } from "./supabase";
+import { Organization } from "@prisma/client";
 
 export default function create(): string {
   return crypto.randomBytes(32).toString("hex");
 }
 
-export async function getApiKeyOrThrow(
+export async function authOrganization(
   request: NextApiRequest
-): Promise<string> {
+): Promise<Organization | null> {
   const apiKey = request.headers["x-api-key"] as string | undefined;
   const authorization = request.headers["authorization"] as string | undefined;
   if (apiKey) {
-    await prisma.organization.findFirst({ where: { apiKey } });
-    return apiKey;
+    const organization = await prisma.organization.findFirstOrThrow({
+      where: { apiKey },
+    });
+    return organization;
   } else if (authorization) {
     const accessToken = authorization.split("Bearer ")[1];
     const { data } = await supabase.auth.getUser(accessToken);
-    const organization = await prisma.organization.findFirst({
+    const organization = await prisma.organization.findFirstOrThrow({
       where: {
         users: {
           some: {
@@ -27,11 +30,7 @@ export async function getApiKeyOrThrow(
         },
       },
     });
-    if (organization) {
-      return organization.apiKey;
-    } else {
-      throw new Error("Not found");
-    }
+    return organization;
   } else {
     throw new Error("Unauthorized");
   }

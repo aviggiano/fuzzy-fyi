@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@services/prisma";
-import { JobStatus } from "@prisma/client";
 import { colorMap, label } from "@services/jobUtils";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {

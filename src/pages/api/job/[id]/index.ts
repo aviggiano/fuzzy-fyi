@@ -3,7 +3,7 @@ import * as ec2 from "@services/ec2";
 import * as github from "@services/github";
 import prisma from "@services/prisma";
 import { getJobWithSignedUrls } from "@services/jobUtils";
-import { getApiKeyOrThrow } from "@services/auth";
+import { authOrganization } from "@services/auth";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -16,7 +16,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
 async function GET(request: NextApiRequest, response: NextApiResponse) {
   const { query } = request;
-  await getApiKeyOrThrow(request);
+  await authOrganization(request);
 
   const job = await prisma.job.findUniqueOrThrow({
     where: {
@@ -33,7 +33,7 @@ async function GET(request: NextApiRequest, response: NextApiResponse) {
 
 async function PATCH(request: NextApiRequest, response: NextApiResponse) {
   const { query, body } = request;
-  await getApiKeyOrThrow(request);
+  await authOrganization(request);
 
   const job = await prisma.job.update({
     data: {
@@ -52,7 +52,7 @@ async function PATCH(request: NextApiRequest, response: NextApiResponse) {
 
 async function DELETE(request: NextApiRequest, response: NextApiResponse) {
   const { query } = request;
-  await getApiKeyOrThrow(request);
+  await authOrganization(request);
 
   let job = await prisma.job.findUniqueOrThrow({
     where: {
