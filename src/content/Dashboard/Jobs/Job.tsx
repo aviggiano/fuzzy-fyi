@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 
 import Box from "@mui/material/Box";
-import { formatTimeElapsed, getEC2Cost, label } from "@services/jobUtils";
+import { formatTimeElapsed, label } from "@services/jobUtils";
 import { JobOutput } from "@contexts/JobsContext";
 
 const style = `
@@ -77,11 +77,6 @@ function Job({ job }: { job?: JobOutput }) {
                       disabled
                     />
                     <TextField
-                      label="Cost"
-                      defaultValue={getEC2Cost(job)}
-                      disabled
-                    />
-                    <TextField
                       fullWidth
                       style={{ width: "420px" }}
                       required
@@ -94,6 +89,31 @@ function Job({ job }: { job?: JobOutput }) {
                 </CardContent>
               </Card>
             </Grid>
+
+            {job.tail ? (
+              <Grid item xs={12}>
+                <Card>
+                  <CardHeader title="Logs" />
+                  <Divider />
+                  <CardContent>
+                    <Box
+                      component="form"
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <div>
+                        <div>
+                          <pre>{job.tail}</pre>
+                        </div>
+                      </div>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ) : null}
 
             {job.logs ? (
               <Grid item xs={12}>

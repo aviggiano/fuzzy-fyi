@@ -40,7 +40,7 @@ curl -XPATCH -H 'Content-Type: application/json' -H "x-api-key: $X_API_KEY" --da
 JOB_CMD=$(echo $JOB | jq --raw-output '.cmd')
 function tail_logs() {
   while true; do
-    TAIL=$(tail logs.txt || true)
+    TAIL=$(tail -n1 logs.txt || true)
     curl -XPATCH -H 'Content-Type: application/json' -H "x-api-key: $X_API_KEY" --data "{\"tail\":\"$TAIL\"}" "$BACKEND_URL/api/job/$JOB_ID"
     sleep 60;
   done;
