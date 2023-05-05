@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Job" ALTER COLUMN "amiId" DROP DEFAULT;
+
+-- AlterTable
+ALTER TABLE "Template" ALTER COLUMN "amiId" DROP DEFAULT;

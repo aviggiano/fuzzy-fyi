@@ -50,6 +50,7 @@ model Template {
   id           String   @id @default(uuid())
   cmd          String
   instanceType String
+  amiId        String
   project      Project  @relation(fields: [projectId], references: [id])
   projectId    String
   createdAt    DateTime @default(now())
@@ -65,6 +66,8 @@ model Job {
   cmd               String
   instanceId        String
   instanceType      String
+  amiId             String
+  logsTail          String
   logsUrl           String?
   coverageUrl       String?
   pullRequestNumber String?

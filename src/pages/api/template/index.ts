@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@services/prisma";
 import { authOrganization } from "@services/auth";
+import { config } from "@config";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const handlers: Record<string, any> = {
@@ -13,10 +14,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 async function POST(request: NextApiRequest, response: NextApiResponse) {
   await authOrganization(request);
   const { body } = request;
+  const amiId = body.amiId || config.aws.ec2.amiId;
 
   const template = await prisma.template.create({
     data: {
       ...body,
+      amiId,
     },
   });
 

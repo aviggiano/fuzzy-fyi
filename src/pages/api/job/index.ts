@@ -27,8 +27,14 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
       })
     : null;
 
+  const projectId = body.projectId || template?.projectId!;
+  const instanceType = body.instanceType || template?.instanceType!;
+  const amiId = body.amiId || template?.amiId || config.aws.ec2.amiId;
+  const cmd = body.cmd || template?.cmd!;
+  const ref = body.ref;
+
   const instanceId = await ec2.runInstance({
-    instanceType: body.instanceType || template?.instanceType!,
+    instanceType,
     userData: Buffer.from(
       [
         `#!/usr/bin/env bash`,
@@ -42,17 +48,19 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
         `sudo -Eu ubuntu bash /home/ubuntu/runner.sh`,
       ].join("\n")
     ).toString("base64"),
+    amiId,
   });
 
   const job = await prisma.job.create({
     data: {
-      ref: body.ref,
-      cmd: body.cmd || template?.cmd!,
-      instanceType: body.instanceType || template?.instanceType!,
+      ref,
+      cmd,
+      instanceType,
+      amiId,
       pullRequestNumber: body.pullRequestNumber,
       project: {
         connect: {
-          id: body.projectId || template?.projectId!,
+          id: projectId,
         },
       },
       ...(template

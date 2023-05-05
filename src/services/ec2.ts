@@ -5,12 +5,14 @@ const ec2 = new EC2({ apiVersion: "2016-11-15" });
 export async function runInstance({
   instanceType,
   userData,
+  amiId,
 }: {
   instanceType: string;
   userData: string;
+  amiId: string;
 }): Promise<string> {
   const data = await ec2.runInstances({
-    ImageId: config.aws.ec2.amiId,
+    ImageId: amiId,
     KeyName: config.aws.ec2.keyName,
     InstanceType: instanceType,
     UserData: userData,

@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Job" ADD COLUMN     "amiId" TEXT NOT NULL DEFAULT 'ami-06ffade4100510560';
+
+-- AlterTable
+ALTER TABLE "Template" ADD COLUMN     "amiId" TEXT NOT NULL DEFAULT 'ami-06ffade4100510560';
