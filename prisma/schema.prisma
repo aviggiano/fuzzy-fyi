@@ -67,7 +67,7 @@ model Job {
   instanceId        String
   instanceType      String
   amiId             String
-  logsTail          String
+  tail              String?
   logsUrl           String?
   coverageUrl       String?
   pullRequestNumber String?

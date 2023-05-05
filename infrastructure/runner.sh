@@ -38,9 +38,17 @@ fi
 echo "[$(date)] Run command"
 curl -XPATCH -H 'Content-Type: application/json' -H "x-api-key: $X_API_KEY" --data "{\"status\":\"RUNNING\"}" "$BACKEND_URL/api/job/$JOB_ID"
 JOB_CMD=$(echo $JOB | jq --raw-output '.cmd')
+function tail_logs() {
+  while true; do
+    TAIL=$(tail logs.txt || true)
+    curl -XPATCH -H 'Content-Type: application/json' -H "x-api-key: $X_API_KEY" --data "{\"tail\":\"$TAIL\"}" "$BACKEND_URL/api/job/$JOB_ID"
+    sleep 60;
+  done;
+}
+tail_logs &
 echo "[$(date)] '$JOB_CMD'"
 eval $JOB_CMD | tee logs.txt
-if [ $(grep 'failed!' logs.txt | wc -l) -gt 0 ] || [ $(grep 'passed!' logs.txt | wc -l) -eq 0 ]; then
+if [ $(grep 'failed!' logs.txt | wc -l) -gt 0 ] || [ $(grep 'passed!\|passing' logs.txt | wc -l) -eq 0 ]; then
   sudo dmesg -T | egrep -i 'killed process' >> logs.txt
   STATUS="FINISHED_ERROR"
 else
