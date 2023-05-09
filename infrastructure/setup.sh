@@ -49,7 +49,7 @@ rm echidna-2.1.1-Ubuntu-22.04.tar.gz
 
 echo "[$(date)] Install foundry"
 curl -L https://foundry.paradigm.xyz | bash
-export PATH="$PATH:$HOME/.foundry/bin"
+sudo mv .foundry/bin/* /usr/bin/
 foundryup
 
 echo "[$(date)] Finish setup"

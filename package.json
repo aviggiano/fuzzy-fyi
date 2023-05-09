@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "npx prisma migrate dev",
-    "infrastructure": "cd infrastructure && packer build"
+    "infrastructure": "cd infrastructure && packer build aws-ubuntu-fuzzy-fyi.pkr.hcl"
   },
   "dependencies": {
     "@aws-sdk/client-ec2": "^3.297.0",
