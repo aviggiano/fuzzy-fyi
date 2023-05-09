@@ -48,7 +48,7 @@ function tail_logs() {
 tail_logs &
 echo "[$(date)] '$JOB_CMD'"
 eval $JOB_CMD | tee logs.txt
-if [ $(grep 'failed!' logs.txt | wc -l) -gt 0 ] || [ $(grep 'passed!\|passing' logs.txt | wc -l) -eq 0 ]; then
+if [ $(grep 'failed!\|FAIL' logs.txt | wc -l) -gt 0 ] || [ $(grep 'passed!\|passing\|PASS' logs.txt | wc -l) -eq 0 ]; then
   sudo dmesg -T | egrep -i 'killed process' >> logs.txt
   STATUS="FINISHED_ERROR"
 else
