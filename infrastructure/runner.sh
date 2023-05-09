@@ -60,7 +60,11 @@ aws s3 cp --content-type "text/plain;charset=UTF-8" logs.txt s3://$S3_BUCKET/job
 aws s3 cp --content-type "text/plain;charset=UTF-8" /var/log/cloud-init-output.log s3://$S3_BUCKET/job/$JOB_ID/
 LOGS_URL="$OUTPUT_URL/job/$JOB_ID/logs.txt"
 aws s3 sync $ECHIDNA_DIRECTORY/ s3://$S3_BUCKET/template/$TEMPLATE_ID/$ECHIDNA_DIRECTORY/
-COVERAGE_URL="$OUTPUT_URL/template/$TEMPLATE_ID/$(find $ECHIDNA_DIRECTORY -name '*.html' | tail -n1)"
+HTML=$(find $ECHIDNA_DIRECTORY -name '*.html' | tail -n1)
+COVERAGE_URL=""
+if [ "$HTML" != "" ]; then
+  COVERAGE_URL="$OUTPUT_URL/template/$TEMPLATE_ID/$(find $ECHIDNA_DIRECTORY -name '*.html' | tail -n1)"
+fi
 curl -XPATCH -H 'Content-Type: application/json' -H "x-api-key: $X_API_KEY" --data "{\"status\":\"$STATUS\",\"logsUrl\":\"$LOGS_URL\",\"coverageUrl\":\"$COVERAGE_URL\"}" "$BACKEND_URL/api/job/$JOB_ID"
 
 echo "[$(date)] Finish job"
