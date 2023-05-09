@@ -8,12 +8,16 @@ export async function getJobWithSignedUrls(
   job: Job & { project: Project }
 ): Promise<Job & { project: Project }> {
   if (job.status.startsWith("FINISHED")) {
-    const coverageUrl = await s3.getSignedUrl(
-      job.coverageUrl!.replace(`${config.backend.outputUrl}/`, "")
-    );
-    const logsUrl = await s3.getSignedUrl(
-      job.logsUrl!.replace(`${config.backend.outputUrl}/`, "")
-    );
+    const coverageUrl = job.coverageUrl
+      ? await s3.getSignedUrl(
+          job.coverageUrl.replace(`${config.backend.outputUrl}/`, "")
+        )
+      : "";
+    const logsUrl = job.logsUrl
+      ? await s3.getSignedUrl(
+          job.logsUrl.replace(`${config.backend.outputUrl}/`, "")
+        )
+      : "";
     return {
       ...job,
       coverageUrl,
