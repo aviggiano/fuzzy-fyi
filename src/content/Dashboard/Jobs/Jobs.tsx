@@ -261,6 +261,7 @@ function Jobs() {
                             color="text.secondary"
                             gutterBottom
                             maxWidth="260px"
+                            overflow="auto"
                           >
                             {job.cmd}
                           </Typography>
